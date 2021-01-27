@@ -206,13 +206,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.9570802, y: -0.03494677, z: 0.25644884, w: 0.13042314}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 164.48, y: -30, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +230,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &963194226
 AudioListener:
   m_ObjectHideFlags: 0
@@ -307,6 +307,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Gino's Corner
+      objectReference: {fileID: 0}
+    - target: {fileID: 582098173333937362, guid: c568c18bb18dbae4fa324098e3867249,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5437059019008997210, guid: c568c18bb18dbae4fa324098e3867249,
         type: 3}
@@ -432,6 +437,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Harry's Corner
       objectReference: {fileID: 0}
+    - target: {fileID: 5307948706084954759, guid: 354bcef47453d684f91bf2f79d10e86f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 354bcef47453d684f91bf2f79d10e86f, type: 3}
 --- !u!1001 &724307122843147514
@@ -445,6 +455,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fox's Corner
+      objectReference: {fileID: 0}
+    - target: {fileID: 1124238056725349723, guid: 4238eb703f31c4143a187bed3179ae3a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8884661974180176905, guid: 4238eb703f31c4143a187bed3179ae3a,
         type: 3}
@@ -515,6 +530,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dan's Corner
       objectReference: {fileID: 0}
+    - target: {fileID: 2129771039196466687, guid: e79973f78ab07724a839c0a7b12dd3ca,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2144280821775043228, guid: e79973f78ab07724a839c0a7b12dd3ca,
         type: 3}
       propertyPath: m_RootOrder
@@ -569,6 +589,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8951638085338902203, guid: e79973f78ab07724a839c0a7b12dd3ca,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8951638086144009807, guid: e79973f78ab07724a839c0a7b12dd3ca,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.175
+      objectReference: {fileID: 0}
+    - target: {fileID: 8951638086169009370, guid: e79973f78ab07724a839c0a7b12dd3ca,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8951638086484115218, guid: e79973f78ab07724a839c0a7b12dd3ca,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8951638086484115218, guid: e79973f78ab07724a839c0a7b12dd3ca,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e79973f78ab07724a839c0a7b12dd3ca, type: 3}
