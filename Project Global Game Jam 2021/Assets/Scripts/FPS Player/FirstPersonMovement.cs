@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class FirstPersonMovement : MonoBehaviour
 {
+    [SerializeField] private PlayerShoot playerShoot;
     [SerializeField] private float _Speed = 12f;
     [SerializeField] private GameObject _GroundChecker;
     [SerializeField] private LayerMask _GroundMask;
@@ -16,11 +17,19 @@ public class FirstPersonMovement : MonoBehaviour
     private CharacterController _CharacterController;
     
     private float _Gravity = -9.81f; 
+    private float originalSpeed;
+    private float aimSpeed;
     private Vector3 _CurrentVelocity;
 
     void Awake()
     {
         _CharacterController = GetComponent<CharacterController>();
+    }
+
+    private void Start()
+    {
+        originalSpeed = _Speed;
+        aimSpeed = originalSpeed - playerShoot.AimMoveSpeedDecrease;
     }
 
     void Update()
@@ -36,6 +45,7 @@ public class FirstPersonMovement : MonoBehaviour
         float yMove = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * xMove + transform.forward * yMove;
+        _Speed = Mathf.Lerp(originalSpeed, aimSpeed, playerShoot.AimBlend);
         _CharacterController.Move(Vector3.ClampMagnitude(move, 1) * _Speed * Time.deltaTime);
 
         if (Input.GetButtonDown("Jump") && isGrounded && canJump)
