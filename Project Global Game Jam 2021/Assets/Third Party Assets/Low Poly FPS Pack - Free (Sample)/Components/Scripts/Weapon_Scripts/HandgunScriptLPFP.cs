@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using FPSControllerLPFP;
+using TMPro;
 
 // ----- Low Poly FPS Pack Free Version -----
 public class HandgunScriptLPFP : MonoBehaviour {
@@ -48,6 +49,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	private Vector3 initialSwayPosition;
 
 	[Header("Weapon Settings")]
+	[SerializeField] private TextMeshProUGUI ammoText;
 	[SerializeField] private float shootDelay;
 	[SerializeField] private float maxRecoil;
 	[SerializeField] private float maxAimRecoil;
@@ -199,6 +201,8 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		shootAudioSource.clip = SoundClips.shootSound;
 
 		currentMaxSwayAmount = maxSwayAmount;
+
+		UpdateAmmoText();
 	}
 
 	private void LateUpdate () {
@@ -372,6 +376,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 				
 			//Remove 1 bullet from ammo
 			currentAmmo -= 1;
+			UpdateAmmoText();
 
 			shootAudioSource.clip = SoundClips.shootSound;
 			shootAudioSource.Play ();
@@ -598,6 +603,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		//Restore ammo when reloading
 		currentAmmo = ammo;
 		outOfAmmo = false;
+		UpdateAmmoText();
 	}
 
 	//Reload
@@ -640,6 +646,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		//Restore ammo when reloading
 		currentAmmo = ammo;
 		outOfAmmo = false;
+		UpdateAmmoText();
 	}
 
 	//Enable bullet in mag renderer after set amount of time
@@ -690,6 +697,11 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		{
 			isInspecting = false;
 		}
+	}
+
+	private void UpdateAmmoText()
+	{
+		ammoText.text = "Ammo: " + currentAmmo + " | inf";
 	}
 }
 // ----- Low Poly FPS Pack Free Version -----
