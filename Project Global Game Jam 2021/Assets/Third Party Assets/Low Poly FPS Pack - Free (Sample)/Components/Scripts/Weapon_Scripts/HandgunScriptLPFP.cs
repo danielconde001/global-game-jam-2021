@@ -7,7 +7,8 @@ using FPSControllerLPFP;
 public class HandgunScriptLPFP : MonoBehaviour {
 	[SerializeField] private FpsControllerLPFP fpsControllerLPFP;
 	[SerializeField] private Light selfLight;
-
+	[SerializeField] private LineRenderer selfLineRenderer;
+	[SerializeField] private LayerMask shootableLayer;
 	//Animator component attached to weapon
 	Animator anim;
 
@@ -47,7 +48,11 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	private Vector3 initialSwayPosition;
 
 	[Header("Weapon Settings")]
-
+	[SerializeField] private float shootDelay;
+	[SerializeField] private float maxRecoil;
+	[SerializeField] private float maxAimRecoil;
+	[SerializeField] private int damage;
+	private bool canShoot = true;
 	public float sliderBackTimer = 1.58f;
 	private bool hasStartedSliderBack;
 
@@ -151,6 +156,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		public Transform bulletSpawnPoint;
 		//Grenade prefab spawn from this point
 		public Transform grenadeSpawnPoint;
+		public Transform fakeBulletEndPoint;
 	}
 	public spawnpoints Spawnpoints;
 
@@ -358,11 +364,11 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		}
 
 		//Shooting 
-		if (Input.GetMouseButtonDown (0) && !outOfAmmo && !isReloading && !isInspecting && !isRunning) 
+		if (Input.GetMouseButton (0) && !outOfAmmo && !isReloading && !isInspecting && !isRunning && canShoot) 
 		{
+			StartCoroutine(ShootDelayTimer());
 			anim.Play ("Fire", 0, 0f);
 	
-			muzzleParticles.Emit (1);
 				
 			//Remove 1 bullet from ammo
 			currentAmmo -= 1;
@@ -376,13 +382,14 @@ public class HandgunScriptLPFP : MonoBehaviour {
 			if (!isAiming) //if not aiming
 			{
 				anim.Play ("Fire", 0, 0f);
-		
-				muzzleParticles.Emit (1);
+
+				if(enableMuzzleflash)
+					muzzleParticles.Emit (1);
 
 				if (enableSparks == true) 
 				{
 					//Emit random amount of spark particles
-					sparkParticles.Emit (Random.Range (1, 6));
+					sparkParticles.Emit (Random.Range (minSparkEmission, maxSparkEmission + 1));
 				}
 			} 
 			else //if aiming
@@ -391,7 +398,8 @@ public class HandgunScriptLPFP : MonoBehaviour {
 					
 				//If random muzzle is false
 				if (!randomMuzzleflash) {
-					muzzleParticles.Emit (1);
+					if(enableMuzzleflash)
+						muzzleParticles.Emit (1);
 					//If random muzzle is true
 				} 
 				else if (randomMuzzleflash == true) 
@@ -402,7 +410,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 						if (enableSparks == true) 
 						{
 							//Emit random amount of spark particles
-							sparkParticles.Emit (Random.Range (1, 6));
+							sparkParticles.Emit (Random.Range (minSparkEmission, maxSparkEmission + 1));
 						}
 						if (enableMuzzleflash == true) 
 						{
@@ -413,7 +421,34 @@ public class HandgunScriptLPFP : MonoBehaviour {
 					}
 				}
 			}
-				
+			//add recoil spread here
+			Vector3 recoil;
+			if(isAiming)
+				recoil = new Vector3(Random.Range(-maxAimRecoil, maxAimRecoil), Random.Range(-maxAimRecoil, maxAimRecoil), Random.Range(-maxAimRecoil, maxAimRecoil));
+			else
+				recoil = new Vector3(Random.Range(-maxRecoil, maxRecoil), Random.Range(-maxRecoil, maxRecoil), Random.Range(-maxRecoil, maxRecoil));
+
+			selfLineRenderer.SetPosition(0, Spawnpoints.bulletSpawnPoint.position);
+
+			RaycastHit hit;
+			if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward + recoil, out hit, 100.0f, shootableLayer))
+			{
+				//add hit calculation here
+				if(hit.collider != null)
+				{
+					if(hit.collider.gameObject.GetComponent<EntityHealth>() != null)
+					{
+						hit.collider.gameObject.GetComponent<EntityHealth>().TakeDamage(damage);
+					}
+				}
+
+				selfLineRenderer.SetPosition(1, hit.point);
+			}
+			else
+			{
+				selfLineRenderer.SetPosition(1, (Spawnpoints.fakeBulletEndPoint.position + recoil));
+			}
+			/*
 			//Spawn bullet at bullet spawnpoint
 			var bullet = (Transform)Instantiate (
 				Prefabs.bulletPrefab,
@@ -423,6 +458,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 			//Add velocity to the bullet
 			bullet.GetComponent<Rigidbody>().velocity = 
 			bullet.transform.forward * bulletForce;
+			*/
 
 			//Spawn casing prefab at spawnpoint
 			Instantiate (Prefabs.casingPrefab, 
@@ -469,7 +505,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		}
 
 		//Reload 
-		if (Input.GetKeyDown (KeyCode.R) && !isReloading && !isInspecting) 
+		if (Input.GetKeyDown (KeyCode.R) && !isReloading && !isInspecting && currentAmmo < ammo) 
 		{
 			//Reload
 			Reload ();
@@ -616,9 +652,18 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	//Show light when shooting, then disable after set amount of time
 	private IEnumerator MuzzleFlashLight () 
 	{
+		selfLineRenderer.enabled = true;
 		muzzleflashLight.enabled = true;
 		yield return new WaitForSeconds (lightDuration);
 		muzzleflashLight.enabled = false;
+		selfLineRenderer.enabled = false;
+	}
+
+	private IEnumerator ShootDelayTimer()
+	{
+		canShoot = false;
+		yield return new WaitForSeconds(shootDelay);
+		canShoot = true;
 	}
 
 	//Check current animation playing
