@@ -6,6 +6,7 @@ using TMPro;
 
 // ----- Low Poly FPS Pack Free Version -----
 public class HandgunScriptLPFP : MonoBehaviour {
+	public static HandgunScriptLPFP current;
 	[SerializeField] private FpsControllerLPFP fpsControllerLPFP;
 	[SerializeField] private Light selfLight;
 	[SerializeField] private LineRenderer selfLineRenderer;
@@ -176,6 +177,28 @@ public class HandgunScriptLPFP : MonoBehaviour {
 
 	private bool soundHasPlayed = false;
 
+	public void HolsterGun()
+	{
+		holstered = true;
+
+		ammoText.text = "";
+		mainAudioSource.clip = SoundClips.holsterSound;
+		mainAudioSource.Play();
+
+		hasBeenHolstered = true;
+	}
+
+	public void UnholsterGun()
+	{
+		holstered = false;
+		
+		UpdateAmmoText();
+		mainAudioSource.clip = SoundClips.takeOutSound;
+		mainAudioSource.Play ();
+
+		hasBeenHolstered = false;
+	}
+
 	private void Awake () 
 	{
 		//Set the animator component
@@ -203,6 +226,10 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		currentMaxSwayAmount = maxSwayAmount;
 
 		UpdateAmmoText();
+		holstered = true;
+		hasBeenHolstered = true;
+		ammoText.text = "";
+		current = this;
 	}
 
 	private void LateUpdate () {
@@ -228,7 +255,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 
 		//Aiming
 		//Toggle camera FOV when right click is held down
-		if(Input.GetButton("Fire2") && !isReloading && !isRunning && !isInspecting) 
+		if(Input.GetButton("Fire2") && !isReloading && !isRunning && !isInspecting && !holstered) 
 		{
 			gunCamera.fieldOfView = Mathf.Lerp (gunCamera.fieldOfView,
 				aimFov, fovSpeed * Time.deltaTime);
@@ -368,7 +395,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		}
 
 		//Shooting 
-		if (Input.GetMouseButton (0) && !outOfAmmo && !isReloading && !isInspecting && !isRunning && canShoot) 
+		if (Input.GetMouseButton (0) && !outOfAmmo && !isReloading && !isInspecting && !isRunning && !holstered && canShoot) 
 		{
 			StartCoroutine(ShootDelayTimer());
 			anim.Play ("Fire", 0, 0f);
@@ -510,7 +537,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		}
 
 		//Reload 
-		if (Input.GetKeyDown (KeyCode.R) && !isReloading && !isInspecting && currentAmmo < ammo) 
+		if (Input.GetKeyDown (KeyCode.R) && !isReloading && !isInspecting && !holstered && currentAmmo < ammo) 
 		{
 			//Reload
 			Reload ();
