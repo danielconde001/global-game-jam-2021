@@ -11,7 +11,7 @@ public class EntityHealth : MonoBehaviour
 
     public virtual void TakeDamage(int damage)
     {
-        if(isInvulnerable)
+        if(!isInvulnerable)
             currentHealth -= damage;
 
         if(currentHealth <= 0)
