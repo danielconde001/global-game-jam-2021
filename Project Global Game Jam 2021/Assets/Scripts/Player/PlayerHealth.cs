@@ -23,6 +23,6 @@ public class PlayerHealth : EntityHealth
 
     protected override void Death()
     {
-        //put game over here
+        Debug.Log("You dieded!");
     }
 }

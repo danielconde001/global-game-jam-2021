@@ -13,10 +13,6 @@ public class EnemyHealth : EntityHealth
         animator = GetComponent<Animator>();
     }
 
-    private void Update() {
-        Debug.Log(currentHealth);
-    }
-
     protected override void Death()
     {
         animator.SetTrigger("Dead");

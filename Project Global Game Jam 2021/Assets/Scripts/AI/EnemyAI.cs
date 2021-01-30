@@ -14,6 +14,7 @@ public class EnemyAI : MonoBehaviour
     public float health;
 
     [SerializeField] Animator animator;
+    [SerializeField] bool enableGizmos = true;
 
     //Patroling
     public Vector3 walkPoint;
@@ -35,7 +36,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Awake()
     {
-        player = GameObject.Find("Player").transform;
+        if (!player) player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
     }
@@ -124,6 +125,8 @@ public class EnemyAI : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if (!enableGizmos) return;
+
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
         Gizmos.color = Color.yellow;
