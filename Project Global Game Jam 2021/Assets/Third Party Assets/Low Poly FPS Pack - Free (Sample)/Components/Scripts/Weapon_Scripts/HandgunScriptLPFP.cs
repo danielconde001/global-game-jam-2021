@@ -2,12 +2,18 @@
 using System.Collections;
 using UnityEngine.UI;
 using FPSControllerLPFP;
+using TMPro;
 
 // ----- Low Poly FPS Pack Free Version -----
 public class HandgunScriptLPFP : MonoBehaviour {
+	public static HandgunScriptLPFP current;
 	[SerializeField] private FpsControllerLPFP fpsControllerLPFP;
 	[SerializeField] private Light selfLight;
-
+	[SerializeField] private LineRenderer selfLineRenderer;
+	[SerializeField] private LayerMask shootableLayer;
+	[SerializeField] private GameObject crosshair;
+	[SerializeField] private GameObject zombieBulletFX;
+	[SerializeField] private GameObject woodBulletFX;
 	//Animator component attached to weapon
 	Animator anim;
 
@@ -47,7 +53,12 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	private Vector3 initialSwayPosition;
 
 	[Header("Weapon Settings")]
-
+	[SerializeField] private TextMeshProUGUI ammoText;
+	[SerializeField] private float shootDelay;
+	[SerializeField] private float maxRecoil;
+	[SerializeField] private float maxAimRecoil;
+	[SerializeField] private int damage;
+	private bool canShoot = true;
 	public float sliderBackTimer = 1.58f;
 	private bool hasStartedSliderBack;
 
@@ -151,6 +162,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		public Transform bulletSpawnPoint;
 		//Grenade prefab spawn from this point
 		public Transform grenadeSpawnPoint;
+		public Transform fakeBulletEndPoint;
 	}
 	public spawnpoints Spawnpoints;
 
@@ -167,6 +179,28 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	public soundClips SoundClips;
 
 	private bool soundHasPlayed = false;
+
+	public void HolsterGun()
+	{
+		holstered = true;
+
+		ammoText.text = "";
+		mainAudioSource.clip = SoundClips.holsterSound;
+		mainAudioSource.Play();
+
+		hasBeenHolstered = true;
+	}
+
+	public void UnholsterGun()
+	{
+		holstered = false;
+		
+		UpdateAmmoText();
+		mainAudioSource.clip = SoundClips.takeOutSound;
+		mainAudioSource.Play ();
+
+		hasBeenHolstered = false;
+	}
 
 	private void Awake () 
 	{
@@ -193,6 +227,12 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		shootAudioSource.clip = SoundClips.shootSound;
 
 		currentMaxSwayAmount = maxSwayAmount;
+
+		UpdateAmmoText();
+		holstered = true;
+		hasBeenHolstered = true;
+		ammoText.text = "";
+		current = this;
 	}
 
 	private void LateUpdate () {
@@ -218,8 +258,9 @@ public class HandgunScriptLPFP : MonoBehaviour {
 
 		//Aiming
 		//Toggle camera FOV when right click is held down
-		if(Input.GetButton("Fire2") && !isReloading && !isRunning && !isInspecting) 
+		if(Input.GetButton("Fire2") && !isReloading && !isRunning && !isInspecting && !holstered) 
 		{
+			crosshair.SetActive(false);
 			gunCamera.fieldOfView = Mathf.Lerp (gunCamera.fieldOfView,
 				aimFov, fovSpeed * Time.deltaTime);
 
@@ -241,6 +282,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		else 
 		{
 			//When right click is released
+			crosshair.SetActive(true);
 			gunCamera.fieldOfView = Mathf.Lerp(gunCamera.fieldOfView,
 				defaultFov,fovSpeed * Time.deltaTime);
 			
@@ -358,14 +400,15 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		}
 
 		//Shooting 
-		if (Input.GetMouseButtonDown (0) && !outOfAmmo && !isReloading && !isInspecting && !isRunning) 
+		if (Input.GetMouseButton (0) && !outOfAmmo && !isReloading && !isInspecting && !isRunning && !holstered && canShoot) 
 		{
+			StartCoroutine(ShootDelayTimer());
 			anim.Play ("Fire", 0, 0f);
 	
-			muzzleParticles.Emit (1);
 				
 			//Remove 1 bullet from ammo
 			currentAmmo -= 1;
+			UpdateAmmoText();
 
 			shootAudioSource.clip = SoundClips.shootSound;
 			shootAudioSource.Play ();
@@ -376,13 +419,14 @@ public class HandgunScriptLPFP : MonoBehaviour {
 			if (!isAiming) //if not aiming
 			{
 				anim.Play ("Fire", 0, 0f);
-		
-				muzzleParticles.Emit (1);
+
+				if(enableMuzzleflash)
+					muzzleParticles.Emit (1);
 
 				if (enableSparks == true) 
 				{
 					//Emit random amount of spark particles
-					sparkParticles.Emit (Random.Range (1, 6));
+					sparkParticles.Emit (Random.Range (minSparkEmission, maxSparkEmission + 1));
 				}
 			} 
 			else //if aiming
@@ -391,7 +435,8 @@ public class HandgunScriptLPFP : MonoBehaviour {
 					
 				//If random muzzle is false
 				if (!randomMuzzleflash) {
-					muzzleParticles.Emit (1);
+					if(enableMuzzleflash)
+						muzzleParticles.Emit (1);
 					//If random muzzle is true
 				} 
 				else if (randomMuzzleflash == true) 
@@ -402,7 +447,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 						if (enableSparks == true) 
 						{
 							//Emit random amount of spark particles
-							sparkParticles.Emit (Random.Range (1, 6));
+							sparkParticles.Emit (Random.Range (minSparkEmission, maxSparkEmission + 1));
 						}
 						if (enableMuzzleflash == true) 
 						{
@@ -413,7 +458,46 @@ public class HandgunScriptLPFP : MonoBehaviour {
 					}
 				}
 			}
-				
+			//add recoil spread here
+			Vector3 recoil;
+			if(isAiming)
+				recoil = new Vector3(Random.Range(-maxAimRecoil, maxAimRecoil), Random.Range(-maxAimRecoil, maxAimRecoil), Random.Range(-maxAimRecoil, maxAimRecoil));
+			else
+				recoil = new Vector3(Random.Range(-maxRecoil, maxRecoil), Random.Range(-maxRecoil, maxRecoil), Random.Range(-maxRecoil, maxRecoil));
+
+			selfLineRenderer.SetPosition(0, Spawnpoints.bulletSpawnPoint.position);
+
+			RaycastHit hit;
+			if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward + recoil, out hit, 100.0f, shootableLayer))
+			{
+				//add hit calculation here
+				if(hit.collider != null)
+				{
+					if(hit.collider.gameObject.GetComponent<EntityHealth>() != null)
+					{
+						hit.collider.gameObject.GetComponent<EntityHealth>().TakeDamage(damage);
+
+						if(hit.collider.gameObject.GetComponent<EnemyHealth>() != null)
+						{	
+							var q = Quaternion.FromToRotation(Vector3.forward, hit.normal);
+							GameObject FXclone = (GameObject)Instantiate(zombieBulletFX, hit.point, q);
+						}
+
+					}
+					else
+					{
+						var q = Quaternion.FromToRotation(Vector3.forward, hit.normal);
+						GameObject FXclone = (GameObject)Instantiate(woodBulletFX, hit.point, q);
+					}
+				}
+
+				selfLineRenderer.SetPosition(1, hit.point);
+			}
+			else
+			{
+				selfLineRenderer.SetPosition(1, (Spawnpoints.fakeBulletEndPoint.position + recoil));
+			}
+			/*
 			//Spawn bullet at bullet spawnpoint
 			var bullet = (Transform)Instantiate (
 				Prefabs.bulletPrefab,
@@ -423,6 +507,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 			//Add velocity to the bullet
 			bullet.GetComponent<Rigidbody>().velocity = 
 			bullet.transform.forward * bulletForce;
+			*/
 
 			//Spawn casing prefab at spawnpoint
 			Instantiate (Prefabs.casingPrefab, 
@@ -469,7 +554,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		}
 
 		//Reload 
-		if (Input.GetKeyDown (KeyCode.R) && !isReloading && !isInspecting) 
+		if (Input.GetKeyDown (KeyCode.R) && !isReloading && !isInspecting && !holstered && currentAmmo < ammo) 
 		{
 			//Reload
 			Reload ();
@@ -496,7 +581,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		anim.SetBool("Walk", fpsControllerLPFP.IsMoving);
 
 		//Running when pressing down W and Left Shift key
-		if (fpsControllerLPFP.CanRun && (Input.GetKey (KeyCode.W) && Input.GetKey (KeyCode.LeftShift))) 
+		if (fpsControllerLPFP.CanRun && (Input.GetKey (KeyCode.W) && Input.GetKey (KeyCode.LeftShift)) && !isAiming && !isReloading) 
 		{
 			isRunning = true;
 		} else {
@@ -562,6 +647,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		//Restore ammo when reloading
 		currentAmmo = ammo;
 		outOfAmmo = false;
+		UpdateAmmoText();
 	}
 
 	//Reload
@@ -604,6 +690,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		//Restore ammo when reloading
 		currentAmmo = ammo;
 		outOfAmmo = false;
+		UpdateAmmoText();
 	}
 
 	//Enable bullet in mag renderer after set amount of time
@@ -616,9 +703,18 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	//Show light when shooting, then disable after set amount of time
 	private IEnumerator MuzzleFlashLight () 
 	{
+		selfLineRenderer.enabled = true;
 		muzzleflashLight.enabled = true;
 		yield return new WaitForSeconds (lightDuration);
 		muzzleflashLight.enabled = false;
+		selfLineRenderer.enabled = false;
+	}
+
+	private IEnumerator ShootDelayTimer()
+	{
+		canShoot = false;
+		yield return new WaitForSeconds(shootDelay);
+		canShoot = true;
 	}
 
 	//Check current animation playing
@@ -645,6 +741,11 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		{
 			isInspecting = false;
 		}
+	}
+
+	private void UpdateAmmoText()
+	{
+		ammoText.text = "Ammo: " + currentAmmo + " | inf";
 	}
 }
 // ----- Low Poly FPS Pack Free Version -----
