@@ -11597,6 +11597,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 768
   crosshair: {fileID: 4655750404877770625}
+  zombieBulletFX: {fileID: 7568076060586232701, guid: f5787def83aeeda46914431ba53fc285,
+    type: 3}
+  woodBulletFX: {fileID: 2493543708793919435, guid: b278e007656bfb645b82d41b0b399d50,
+    type: 3}
   playerCamera: {fileID: 1941098469248296937}
   pcDefaultFov: 60
   pcAimFov: 45
@@ -11613,7 +11617,7 @@ MonoBehaviour:
   ammoText: {fileID: 1269527872308690119}
   shootDelay: 0.3
   maxRecoil: 0.1
-  maxAimRecoil: 0.025
+  maxAimRecoil: 0.01
   damage: 25
   sliderBackTimer: 1.58
   autoReload: 0
@@ -12295,12 +12299,12 @@ MonoBehaviour:
   walkingSound: {fileID: 8300000, guid: 6597a368cd74a924eaedb0171d5b28d3, type: 3}
   runningSound: {fileID: 8300000, guid: 0c58744c3b6fdd844b8348066c3f703e, type: 3}
   aimSpeed: 1
-  walkingSpeed: 3
-  runningSpeed: 8
+  walkingSpeed: 2
+  runningSpeed: 3
   movementSmoothness: 0.125
   jumpForce: 35
   canJump: 0
-  canRun: 0
+  canRun: 1
   mouseSensitivity: 4
   rotationSmoothness: 0
   minVerticalAngle: -90
@@ -12326,6 +12330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalHealth: 100
   isInvulnerable: 0
+  postProcessVolume: {fileID: 1938094066}
   healthText: {fileID: 2993955678588584965}
 --- !u!114 &1692718507
 MonoBehaviour:
@@ -13460,17 +13465,17 @@ AudioReverbZone:
   m_Enabled: 1
   m_MinDistance: 10
   m_MaxDistance: 15
-  m_ReverbPreset: 20
+  m_ReverbPreset: 12
   m_Room: -1000
-  m_RoomHF: -2000
-  m_DecayTime: 1.49
-  m_DecayHFRatio: 0.5
-  m_Reflections: -2466
-  m_ReflectionsDelay: 0.179
-  m_Reverb: -1926
-  m_ReverbDelay: 0.1
+  m_RoomHF: -4000
+  m_DecayTime: 0.3
+  m_DecayHFRatio: 0.1
+  m_Reflections: -1831
+  m_ReflectionsDelay: 0.002
+  m_Reverb: -1630
+  m_ReverbDelay: 0.03
   m_HFReference: 5000
-  m_Diffusion: 21
+  m_Diffusion: 100
   m_Density: 100
   m_LFReference: 250
   m_RoomLF: 0
@@ -13481,7 +13486,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1927511843312181285}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
