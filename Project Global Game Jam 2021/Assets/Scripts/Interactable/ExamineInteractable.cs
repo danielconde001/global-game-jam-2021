@@ -2,13 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExamineInteractable : MonoBehaviour
+public class ExamineInteractable : Interactable
 {
     [SerializeField] protected GameObject examinablePrefab;
     [SerializeField] protected GameObject examineCamera;
+    [SerializeField] protected Transform examineSpot;
 
-    public void Examine()
+    GameObject spawnObj;
+
+    protected void LateUpdate() {
+        if (spawnObj) spawnObj.transform.position = examineSpot.position; 
+    }
+
+    public override void Interact()
     {
-        //Instantiate(examinablePrefab, 
+        base.Interact();
+
+        examineCamera.SetActive(true);
+
+        spawnObj = (GameObject)Instantiate
+        (
+            examinablePrefab, 
+            examineSpot.position,
+            Quaternion.identity
+        );
     }
 }
