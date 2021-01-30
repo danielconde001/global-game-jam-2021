@@ -1,21 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EnemyHealth : EntityHealth
 {
-    public override void TakeDamage(int damage)
-    {
-        base.TakeDamage(damage);
+    [SerializeField] protected UnityEvent OnDeath; 
+    protected Animator animator;
+    
+    protected override void Start() {
+        base.Start();
+        animator = GetComponent<Animator>();
     }
 
-    protected override void Start()
-    {
-        base.Start();
+    private void Update() {
+        Debug.Log(currentHealth);
     }
 
     protected override void Death()
     {
-        base.Death();
+        animator.SetTrigger("Dead");
+        OnDeath.Invoke();
     }
 }
