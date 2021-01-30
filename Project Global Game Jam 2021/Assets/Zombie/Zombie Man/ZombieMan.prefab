@@ -305,9 +305,7 @@ MonoBehaviour:
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 0
   waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 5911379132537851416}
   minIdleTime: 1
   maxIdleTime: 3
   timeBetweenAttacks: 2
