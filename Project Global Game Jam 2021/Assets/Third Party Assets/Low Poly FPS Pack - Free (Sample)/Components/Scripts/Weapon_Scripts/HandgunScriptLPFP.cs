@@ -11,6 +11,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	[SerializeField] private Light selfLight;
 	[SerializeField] private LineRenderer selfLineRenderer;
 	[SerializeField] private LayerMask shootableLayer;
+	[SerializeField] private GameObject crosshair;
 	//Animator component attached to weapon
 	Animator anim;
 
@@ -257,6 +258,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		//Toggle camera FOV when right click is held down
 		if(Input.GetButton("Fire2") && !isReloading && !isRunning && !isInspecting && !holstered) 
 		{
+			crosshair.SetActive(false);
 			gunCamera.fieldOfView = Mathf.Lerp (gunCamera.fieldOfView,
 				aimFov, fovSpeed * Time.deltaTime);
 
@@ -278,6 +280,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		else 
 		{
 			//When right click is released
+			crosshair.SetActive(true);
 			gunCamera.fieldOfView = Mathf.Lerp(gunCamera.fieldOfView,
 				defaultFov,fovSpeed * Time.deltaTime);
 			
