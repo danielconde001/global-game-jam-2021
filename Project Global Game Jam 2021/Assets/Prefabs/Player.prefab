@@ -11596,6 +11596,7 @@ MonoBehaviour:
   shootableLayer:
     serializedVersion: 2
     m_Bits: 768
+  crosshair: {fileID: 4655750404877770625}
   playerCamera: {fileID: 1941098469248296937}
   pcDefaultFov: 60
   pcAimFov: 45
