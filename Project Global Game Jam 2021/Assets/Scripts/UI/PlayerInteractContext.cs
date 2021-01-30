@@ -33,7 +33,7 @@ public class PlayerInteractContext : MonoBehaviour
         HideInteractContext();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if(storedTargetTransform != null)
             MoveInteractContext();
