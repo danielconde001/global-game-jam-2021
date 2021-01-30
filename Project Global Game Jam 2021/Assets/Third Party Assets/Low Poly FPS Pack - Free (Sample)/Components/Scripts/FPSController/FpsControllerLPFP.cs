@@ -225,7 +225,18 @@ namespace FPSControllerLPFP
         {
             var direction = new Vector3(input.Move, 0f, input.Strafe).normalized;
             var worldDirection = transform.TransformDirection(direction);
-            var velocity = worldDirection * (handgunScriptLPFP.IsAiming ? aimSpeed : walkingSpeed);
+            Vector3 velocity = new Vector3(); //= worldDirection * (handgunScriptLPFP.IsAiming ? aimSpeed : walkingSpeed);
+            if(handgunScriptLPFP.IsAiming)
+                velocity = worldDirection * aimSpeed;
+            else
+            {
+                if(!input.Run)
+                    velocity = worldDirection * walkingSpeed;
+                else
+                    velocity = worldDirection * runningSpeed;
+            }
+
+
             //Checks for collisions so that the character does not stuck when jumping against walls.
             var intersectsWall = CheckCollisionsWithWalls(velocity);
             if (intersectsWall)

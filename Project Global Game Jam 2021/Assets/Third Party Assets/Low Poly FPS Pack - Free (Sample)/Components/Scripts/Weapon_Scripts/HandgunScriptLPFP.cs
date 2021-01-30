@@ -567,7 +567,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		anim.SetBool("Walk", fpsControllerLPFP.IsMoving);
 
 		//Running when pressing down W and Left Shift key
-		if (fpsControllerLPFP.CanRun && (Input.GetKey (KeyCode.W) && Input.GetKey (KeyCode.LeftShift))) 
+		if (fpsControllerLPFP.CanRun && (Input.GetKey (KeyCode.W) && Input.GetKey (KeyCode.LeftShift)) && !isAiming && !isReloading) 
 		{
 			isRunning = true;
 		} else {
