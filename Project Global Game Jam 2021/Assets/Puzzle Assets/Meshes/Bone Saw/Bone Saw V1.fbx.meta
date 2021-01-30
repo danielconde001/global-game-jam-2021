@@ -1,11 +1,8 @@
 fileFormatVersion: 2
-guid: 26e578334897cd14183b4e532a73564a
+guid: 1b2959e42bdc8d5489a2f080e80b5747
 ModelImporter:
   serializedVersion: 19301
-  internalIDToNameTable:
-  - first:
-      74: 4842642113087178328
-    second: Armature|SafeDoorOpen
+  internalIDToNameTable: []
   externalObjects: {}
   materials:
     materialImportMode: 1
