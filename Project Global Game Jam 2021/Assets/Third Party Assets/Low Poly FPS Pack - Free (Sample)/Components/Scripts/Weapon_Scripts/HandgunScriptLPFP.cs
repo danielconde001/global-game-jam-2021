@@ -12,6 +12,8 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	[SerializeField] private LineRenderer selfLineRenderer;
 	[SerializeField] private LayerMask shootableLayer;
 	[SerializeField] private GameObject crosshair;
+	[SerializeField] private GameObject zombieBulletFX;
+	[SerializeField] private GameObject woodBulletFX;
 	//Animator component attached to weapon
 	Animator anim;
 
@@ -474,6 +476,18 @@ public class HandgunScriptLPFP : MonoBehaviour {
 					if(hit.collider.gameObject.GetComponent<EntityHealth>() != null)
 					{
 						hit.collider.gameObject.GetComponent<EntityHealth>().TakeDamage(damage);
+
+						if(hit.collider.gameObject.GetComponent<EnemyHealth>() != null)
+						{	
+							var q = Quaternion.FromToRotation(Vector3.forward, hit.normal);
+							GameObject FXclone = (GameObject)Instantiate(zombieBulletFX, hit.point, q);
+						}
+
+					}
+					else
+					{
+						var q = Quaternion.FromToRotation(Vector3.forward, hit.normal);
+						GameObject FXclone = (GameObject)Instantiate(woodBulletFX, hit.point, q);
 					}
 				}
 
