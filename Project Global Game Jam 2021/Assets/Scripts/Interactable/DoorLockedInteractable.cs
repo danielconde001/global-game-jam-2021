@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class DoorLockedInteractable : Interactable
 {
+    [SerializeField] private string lockedText;
     public override void Interact()
     {
         base.Interact();
 
         if(canInteract)
         {
-            //display somewhere that door is locked
+            PlayerInteractContext.current.ShowText(lockedText);
         }
     }
 }

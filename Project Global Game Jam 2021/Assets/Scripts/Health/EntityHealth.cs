@@ -9,6 +9,11 @@ public class EntityHealth : MonoBehaviour
 
     protected int currentHealth;
 
+    public virtual bool CheckIfHealthFull()
+    {
+        return currentHealth == totalHealth ? true : false;
+    }
+
     public virtual void TakeDamage(int damage)
     {
         if(!isInvulnerable)
@@ -21,6 +26,14 @@ public class EntityHealth : MonoBehaviour
 
             Death();
         }
+    }
+
+    public virtual void TakeHealing(int heal)
+    {
+        currentHealth += heal;
+
+        if(currentHealth > totalHealth)
+            currentHealth = totalHealth;
     }
 
     protected virtual void Start()
