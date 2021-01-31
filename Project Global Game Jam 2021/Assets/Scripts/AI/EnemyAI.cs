@@ -93,10 +93,10 @@ public class EnemyAI : MonoBehaviour
 
         Quaternion rotation = Quaternion.LookRotation((player.position - transform.position).normalized, Vector3.up);
         
-        /*transform.eulerAngles = Vector3.MoveTowards(transform.eulerAngles, new Vector3(
+        transform.eulerAngles = Vector3.MoveTowards(transform.eulerAngles, new Vector3(
             transform.eulerAngles.x,
             rotation.eulerAngles.y,
-            transform.eulerAngles.z), 2);*/
+            transform.eulerAngles.z), 2);
 
         if (!alreadyAttacked)
         {
