@@ -103,12 +103,24 @@ public class RoomSpawner : MonoBehaviour
         }
         else
         {
-            if(storedRoomClone != null)
+            if(normalRoomCounter < timesNormalRoomSpawns)
             {
-                Destroy(storedRoomClone);
-                navMeshSurface.BuildNavMesh();
+                if(storedRoomClone != null)
+                {
+                    Destroy(storedRoomClone);
+                    navMeshSurface.BuildNavMesh();
+                }
+                StartCoroutine(SpawnRoomFix());
             }
-            StartCoroutine(SpawnFinalRoomFix());
+            else
+            {
+                if(storedRoomClone != null)
+                {
+                    Destroy(storedRoomClone);
+                    navMeshSurface.BuildNavMesh();
+                }
+                StartCoroutine(SpawnFinalRoomFix());
+            }
         }
 
         /*
