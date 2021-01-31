@@ -19,7 +19,7 @@ public class Interactable : MonoBehaviour
         {
             if(interactDelay > 0.0f)
             {
-                InteractDelayTimer();
+                StartCoroutine(InteractDelayTimer());
             }
         }
     }
