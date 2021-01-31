@@ -39,6 +39,35 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5094453417711986745}
     m_Modifications:
+    - target: {fileID: 626707859, guid: 674f16522d4ae3b408842eaf3008b765, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 626707859, guid: 674f16522d4ae3b408842eaf3008b765, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 626707859, guid: 674f16522d4ae3b408842eaf3008b765, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 1408336355361880220}
+    - target: {fileID: 626707859, guid: 674f16522d4ae3b408842eaf3008b765, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 626707859, guid: 674f16522d4ae3b408842eaf3008b765, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: ObtainKeyPiece
+      objectReference: {fileID: 0}
+    - target: {fileID: 626707859, guid: 674f16522d4ae3b408842eaf3008b765, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: (You type out '5859', which spells out "July".) You've Obtained a Key
+        Piece.
+      objectReference: {fileID: 0}
+    - target: {fileID: 626707859, guid: 674f16522d4ae3b408842eaf3008b765, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 3640657348795101959, guid: 674f16522d4ae3b408842eaf3008b765,
         type: 3}
       propertyPath: m_RootOrder

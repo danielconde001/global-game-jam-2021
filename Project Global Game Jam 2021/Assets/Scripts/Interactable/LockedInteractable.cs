@@ -26,4 +26,10 @@ public class LockedInteractable : Interactable
     {
         PlayerInteractContext.current.ShowText(interactText);
     }
+
+    public void ObtainKeyPiece()
+    {
+        PuzzleManager.Instance.PieceAttained();
+        canInteract = false;
+    }
 }

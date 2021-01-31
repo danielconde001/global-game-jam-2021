@@ -41,6 +41,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 4440443305480183213}
     m_Modifications:
     - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
       propertyPath: OnInteractLocked.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 5264116309622270632}
@@ -48,6 +52,50 @@ PrefabInstance:
       propertyPath: OnInteractLocked.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
       objectReference: {fileID: 5264116310303428606}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 5264116309382124265}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 5264116309382124265}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ShowText
+      objectReference: {fileID: 0}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: ObtainKeyPiece
+      objectReference: {fileID: 0}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_StringArgument
+      value: You've Obtained a Key Piece
+      objectReference: {fileID: 0}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 203801008, guid: beddd1ca3828a034a8ef6e02ef0ef6e6, type: 3}
+      propertyPath: OnInteractUnlocked.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4844134236196500897, guid: beddd1ca3828a034a8ef6e02ef0ef6e6,
         type: 3}
       propertyPath: m_RootOrder
