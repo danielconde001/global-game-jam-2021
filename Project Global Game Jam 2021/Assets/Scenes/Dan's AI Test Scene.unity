@@ -784,6 +784,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1635411341, guid: 3f536952b59e7ae4ca67b50bd915202c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 829569428498416474, guid: 3f536952b59e7ae4ca67b50bd915202c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3984597643121484440, guid: 3f536952b59e7ae4ca67b50bd915202c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6704879690681570398, guid: 3f536952b59e7ae4ca67b50bd915202c,
         type: 3}
       propertyPath: m_RootOrder
@@ -792,7 +806,7 @@ PrefabInstance:
     - target: {fileID: 6704879690681570398, guid: 3f536952b59e7ae4ca67b50bd915202c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 375.2315
+      value: 375.46
       objectReference: {fileID: 0}
     - target: {fileID: 6704879690681570398, guid: 3f536952b59e7ae4ca67b50bd915202c,
         type: 3}
@@ -843,6 +857,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Room_south_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6704879690681570399, guid: 3f536952b59e7ae4ca67b50bd915202c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123031483098854120, guid: 3f536952b59e7ae4ca67b50bd915202c,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894455420199337946, guid: 3f536952b59e7ae4ca67b50bd915202c,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f536952b59e7ae4ca67b50bd915202c, type: 3}
@@ -1043,7 +1072,7 @@ PrefabInstance:
     - target: {fileID: 1921387651470004769, guid: 64c2423cbe00a544aa85b40f8d9268b6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 375.68
+      value: 373.915
       objectReference: {fileID: 0}
     - target: {fileID: 1921387651470004769, guid: 64c2423cbe00a544aa85b40f8d9268b6,
         type: 3}

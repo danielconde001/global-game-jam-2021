@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 560411978172219058}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 7078037960025134995}
   m_Father: {fileID: 0}
@@ -112,6 +112,24 @@ MonoBehaviour:
   canInteract: 1
   interactDelay: 0
   room: {fileID: 0}
+  OnInteractLocked:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4115597654241761645}
+        m_MethodName: ShowText
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: I need to find that piece in this room..
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnInteractUnlocked:
+    m_PersistentCalls:
+      m_Calls: []
+  unlocked: 0
 --- !u!114 &1309824052677230975
 MonoBehaviour:
   m_ObjectHideFlags: 0

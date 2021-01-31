@@ -10,7 +10,7 @@ public class DoorExitInteractable : Interactable
     public UnityEvent OnInteractLocked;
     public UnityEvent OnInteractUnlocked;
 
-    [SerializeField] protected bool unlocked = true;
+    public bool unlocked = true;
 
     public override void Interact()
     {
