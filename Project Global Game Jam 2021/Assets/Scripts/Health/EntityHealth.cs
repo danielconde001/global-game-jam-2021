@@ -6,6 +6,11 @@ public class EntityHealth : MonoBehaviour
 {
     [SerializeField] protected int totalHealth;
     [SerializeField] protected bool isInvulnerable = false;
+    protected bool isDead = false;
+    public bool IsDead
+    {
+        get {return isDead;}
+    }
     public bool IsInvulnerable
     {
         set {isInvulnerable = value;}
@@ -47,6 +52,7 @@ public class EntityHealth : MonoBehaviour
 
     protected virtual void Death()
     {
-        Destroy(gameObject);
+        isDead = true;
+        //Destroy(gameObject);
     }
 }

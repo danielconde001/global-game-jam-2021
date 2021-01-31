@@ -222,6 +222,7 @@ MonoBehaviour:
   _UIContextPosition: {fileID: 1375839652301003285}
   canInteract: 1
   interactDelay: 0
+  ammoAmount: 12
 --- !u!1 &4647773194535789211
 GameObject:
   m_ObjectHideFlags: 0

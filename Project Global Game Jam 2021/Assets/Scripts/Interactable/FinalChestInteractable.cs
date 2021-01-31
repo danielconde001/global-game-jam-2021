@@ -9,6 +9,7 @@ public class FinalChestInteractable : Interactable
         if(canInteract)
         {
             RoomSpawner.current.PlayRickRoll();
+            Application.Quit();
         }
     }
 }

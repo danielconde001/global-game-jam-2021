@@ -1,15 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.Rendering.PostProcessing;
 using DG.Tweening;
+using UnityEngine.UI;
+using FPSControllerLPFP;
 
 public class PlayerHealth : EntityHealth
 {
     public static PlayerHealth current;
+    [SerializeField] private FpsControllerLPFP fpsControllerLPFP;
+    [SerializeField] private HandgunScriptLPFP handgunScriptLPFP;
     [SerializeField] private PostProcessVolume postProcessVolume;
-    [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private Slider healthBarSlider;
+    [SerializeField] private AudioSource selfAudioSource;
+    [SerializeField] private AudioClip playerHurt;
+    [SerializeField] private AudioClip playerHeal;
+    [SerializeField] private AudioClip playerDeath;
 
     private Vignette vignette;
     private ChromaticAberration chromaticAberration;
@@ -19,17 +26,21 @@ public class PlayerHealth : EntityHealth
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
-
-        damageFX.Rewind();
-        damageFX.Play();
         
-        UpdateHealthText();
+        if(!isInvulnerable)
+        {
+            selfAudioSource.PlayOneShot(playerHurt);
+            damageFX.Rewind();
+            damageFX.Play();
+            UpdateHealthText();
+        }
     }
 
     public override void TakeHealing(int heal)
     {
         base.TakeHealing(heal);
 
+        selfAudioSource.PlayOneShot(playerHeal);
         healingFX.Rewind();
         healingFX.Play();
 
@@ -65,11 +76,16 @@ public class PlayerHealth : EntityHealth
 
     protected override void Death()
     {
-        Debug.Log("You dieded!");
+        UpdateHealthText();
+        isInvulnerable = true;
+        selfAudioSource.PlayOneShot(playerDeath);
+        fpsControllerLPFP.SetupDeath();
+        handgunScriptLPFP.SetupDeath();
+        RoomSpawner.current.RestartLevel();
     }
 
     protected void UpdateHealthText()
     {
-        healthText.text = "Health: " + currentHealth;
+        healthBarSlider.value = currentHealth;
     }
 }

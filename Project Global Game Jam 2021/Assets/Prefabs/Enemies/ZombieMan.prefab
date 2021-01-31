@@ -234,7 +234,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6431879882009154722}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 383.8734, y: 0, z: 741.86}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6466545380424513611}
@@ -423,11 +423,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fcf058ac0c34f745923c4a6bad8f4ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyHealth: {fileID: 919132149056056036}
   audioSource: {fileID: 6161990254065860171}
   footsteps:
   - {fileID: 8300000, guid: 2185cb91fd182ec41a7e2d203cd24f34, type: 3}
   - {fileID: 8300000, guid: 3a378cc93eeea0e43b0c5b3a0bf8e7a2, type: 3}
   - {fileID: 8300000, guid: 4ce9153d8977fbf498129615bb6243e2, type: 3}
+  idles:
+  - {fileID: 8300000, guid: 255f42ab5c96c8544a0d520d0ee667d9, type: 3}
+  - {fileID: 8300000, guid: 009c27c896388ca418ab7a9a016b42e9, type: 3}
+  - {fileID: 8300000, guid: 47bbc16b35b25bf4eb362c91bcbbcb4b, type: 3}
+  attack: {fileID: 8300000, guid: 778efbc8ef14a1b489ddb3aad8ac6626, type: 3}
+  die: {fileID: 8300000, guid: 4eae4acf19f582843b725eb4d364fcf3, type: 3}
+  thud: {fileID: 8300000, guid: 3cdbbe78dd9857e4d9e204eb504ea38b, type: 3}
+  idleSoundDelay: 10
 --- !u!82 &6161990254065860171
 AudioSource:
   m_ObjectHideFlags: 0
@@ -484,7 +493,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

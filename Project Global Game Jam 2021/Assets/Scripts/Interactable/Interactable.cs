@@ -11,6 +11,12 @@ public class Interactable : MonoBehaviour
     }
     
     [SerializeField] protected bool canInteract = true;
+    public bool CanInteract
+    {
+        get {return canInteract;}
+        set {canInteract = value;}
+    }
+
     [SerializeField] protected float interactDelay = 0.0f;
 
     public virtual void Interact()

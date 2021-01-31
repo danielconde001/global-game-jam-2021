@@ -15,6 +15,7 @@ public class EnemyHealth : EntityHealth
 
     protected override void Death()
     {
+        isDead = true;
         animator.SetTrigger("Dead");
         OnDeath.Invoke();
     }

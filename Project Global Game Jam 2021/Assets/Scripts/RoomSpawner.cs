@@ -5,6 +5,7 @@ using UnityEngine.AI;
 using FPSControllerLPFP;
 using DG.Tweening;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class RoomSpawner : MonoBehaviour
 {
@@ -14,12 +15,16 @@ public class RoomSpawner : MonoBehaviour
     [SerializeField] private HandgunScriptLPFP handgunScriptLPFP;
     [SerializeField] private FpsControllerLPFP fpsControllerLPFP;
     [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private PlayerInteract playerInteract;
     [SerializeField] private NavMeshSurface navMeshSurface;
     [SerializeField] private int timesNormalRoomSpawns = 3;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private List<GameObject> normalRooms;
     [SerializeField] private List<GameObject> keyRooms;
     [SerializeField] private GameObject finalRoom;
+    [SerializeField] private AudioSource selfAudioSource;
+    [SerializeField] private AudioClip doorOpen;
+    [SerializeField] private AudioClip doorClose;
 
     private GameObject storedRoomClone;
     private Transform playerTransform;
@@ -27,6 +32,7 @@ public class RoomSpawner : MonoBehaviour
     private Tween fadeToClearTween;
     private int normalRoomCounter = 0;
     private int keyRoomCounter = 0;
+    private int lastRoomIndex = -1;
 
     public void SpawnRoom()
     {
@@ -36,6 +42,13 @@ public class RoomSpawner : MonoBehaviour
     public void PlayRickRoll()
     {
         Application.OpenURL(url);
+    }
+
+    public void RestartLevel()
+    {
+        fadeToBlackTween.Restart();
+        fadeToBlackTween.Play();
+        StartCoroutine(RestartTheLevel());
     }
 
     private void Awake()
@@ -61,10 +74,12 @@ public class RoomSpawner : MonoBehaviour
         fpsControllerLPFP.CanLook = false;
         fpsControllerLPFP.CanMove = false;
         playerHealth.IsInvulnerable = true;
+        playerInteract.CanInteract = false;
+        selfAudioSource.clip = doorOpen;
+        selfAudioSource.Play();
 
         yield return new WaitForSeconds(1.0f);
 
-        /*
         if(keyRoomCounter < keyRooms.Count)
         {
             if(normalRoomCounter < timesNormalRoomSpawns)
@@ -95,8 +110,8 @@ public class RoomSpawner : MonoBehaviour
             }
             StartCoroutine(SpawnFinalRoomFix());
         }
-        */
 
+        /*
         if(normalRoomCounter < timesNormalRoomSpawns)
         {
             if(storedRoomClone != null)
@@ -115,13 +130,21 @@ public class RoomSpawner : MonoBehaviour
             }
             StartCoroutine(SpawnFinalRoomFix());
         }
-        
+        */
     }
 
     private IEnumerator SpawnRoomFix()
     {
         yield return new WaitForEndOfFrame();
-        GameObject roomClone = (GameObject)Instantiate(normalRooms[Random.Range(0, normalRooms.Count)], spawnPoint.transform.position, spawnPoint.transform.rotation);
+        
+        int rng = Random.Range(0, normalRooms.Count);
+
+        while(rng == lastRoomIndex)
+            rng = Random.Range(0, normalRooms.Count);
+            
+        lastRoomIndex = rng;
+
+        GameObject roomClone = (GameObject)Instantiate(normalRooms[rng], spawnPoint.transform.position, spawnPoint.transform.rotation);
         storedRoomClone = roomClone;
         Room room = roomClone.GetComponent<Room>();
         room.RoomSpawner = this;
@@ -129,13 +152,17 @@ public class RoomSpawner : MonoBehaviour
         playerTransform.rotation = room.PlayerSpawnPoint.rotation;
         navMeshSurface.BuildNavMesh();
         normalRoomCounter++;
-
+        
         fadeToClearTween.Rewind();
         fadeToClearTween.Play();
         handgunScriptLPFP.CanUseGun = true;
         fpsControllerLPFP.CanLook = true;
         fpsControllerLPFP.CanMove = true;
         playerHealth.IsInvulnerable = false;
+        playerInteract.CanInteract = true;
+
+        selfAudioSource.clip = doorClose;
+        selfAudioSource.Play();
     }
     private IEnumerator SpawnKeyRoomFix()
     {
@@ -148,6 +175,7 @@ public class RoomSpawner : MonoBehaviour
         playerTransform.rotation = room.PlayerSpawnPoint.rotation;
         navMeshSurface.BuildNavMesh();
         keyRoomCounter++;
+        normalRoomCounter = 0;
 
         fadeToClearTween.Rewind();
         fadeToClearTween.Play();
@@ -155,6 +183,10 @@ public class RoomSpawner : MonoBehaviour
         fpsControllerLPFP.CanLook = true;
         fpsControllerLPFP.CanMove = true;
         playerHealth.IsInvulnerable = false;
+        playerInteract.CanInteract = true;
+
+        selfAudioSource.clip = doorClose;
+        selfAudioSource.Play();
     }
 
     private IEnumerator SpawnFinalRoomFix()
@@ -174,5 +206,15 @@ public class RoomSpawner : MonoBehaviour
         fpsControllerLPFP.CanLook = true;
         fpsControllerLPFP.CanMove = true;
         playerHealth.IsInvulnerable = false;
+        playerInteract.CanInteract = true;
+
+        selfAudioSource.clip = doorClose;
+        selfAudioSource.Play();
+    }
+
+    private IEnumerator RestartTheLevel()
+    {
+        yield return new WaitForSeconds(1.0f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

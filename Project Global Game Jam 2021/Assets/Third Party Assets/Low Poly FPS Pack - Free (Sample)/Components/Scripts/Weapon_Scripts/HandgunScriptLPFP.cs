@@ -7,7 +7,13 @@ using TMPro;
 // ----- Low Poly FPS Pack Free Version -----
 public class HandgunScriptLPFP : MonoBehaviour {
 	public static HandgunScriptLPFP current;
+	[SerializeField] private Image pistolImage;
+	[SerializeField] private Sprite pistolUnfilledSprite;
+	[SerializeField] private Sprite pistolFilledSprite;
 	[SerializeField] private FpsControllerLPFP fpsControllerLPFP;
+	[SerializeField] private AudioClip clipGunEmpty;
+	[SerializeField] private AudioClip clipFlashlight;
+	[SerializeField] private AudioClip clipGetAmmo;
 	[SerializeField] private bool canUseGun = true;
 	public bool CanUseGun
 	{
@@ -16,7 +22,9 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	[SerializeField] private Light selfLight;
 	[SerializeField] private LineRenderer selfLineRenderer;
 	[SerializeField] private LayerMask shootableLayer;
-	[SerializeField] private GameObject crosshair;
+	[SerializeField] private Image crosshair;
+	[SerializeField] private Sprite crosshairDot;
+	[SerializeField] private Sprite crosshairFull;
 	[SerializeField] private GameObject zombieBulletFX;
 	[SerializeField] private GameObject woodBulletFX;
 	//Animator component attached to weapon
@@ -79,6 +87,10 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	private bool hasBeenHolstered = false;
 	//If weapon is holstered
 	private bool holstered;
+	public bool Holstered
+	{
+		get {return holstered;}
+	}
 	//Check if running
 	private bool isRunning;
 	//Check if aiming
@@ -186,9 +198,15 @@ public class HandgunScriptLPFP : MonoBehaviour {
 
 	private bool soundHasPlayed = false;
 
+	public void SetupDeath()
+	{
+		HolsterGun();
+	}
+
 	public void GiveAmmo(int amount)
 	{
 		totalAmmo += amount;
+		shootAudioSource.PlayOneShot(clipGetAmmo);
 		UpdateAmmoText();
 	}
 
@@ -196,9 +214,11 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	{
 		holstered = true;
 
+		crosshair.sprite = crosshairDot;
 		ammoText.text = "";
 		mainAudioSource.clip = SoundClips.holsterSound;
 		mainAudioSource.Play();
+		pistolImage.sprite = pistolUnfilledSprite;
 
 		hasBeenHolstered = true;
 	}
@@ -207,9 +227,11 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	{
 		holstered = false;
 		
+		crosshair.sprite = crosshairFull;
 		UpdateAmmoText();
 		mainAudioSource.clip = SoundClips.takeOutSound;
 		mainAudioSource.Play ();
+		pistolImage.sprite = pistolFilledSprite;
 
 		hasBeenHolstered = false;
 	}
@@ -242,6 +264,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 
 		UpdateAmmoText();
 		holstered = true;
+		crosshair.sprite = crosshairDot;
 		hasBeenHolstered = true;
 		ammoText.text = "";
 		current = this;
@@ -277,7 +300,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		{
 			if(Input.GetButton("Fire2") && !isReloading && !isRunning && !isInspecting && !holstered) 
 			{
-				crosshair.SetActive(false);
+				crosshair.color = Color.clear;
 				gunCamera.fieldOfView = Mathf.Lerp (gunCamera.fieldOfView,
 					aimFov, fovSpeed * Time.deltaTime);
 
@@ -299,7 +322,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 			else 
 			{
 				//When right click is released
-				crosshair.SetActive(true);
+				crosshair.color = Color.white;
 				gunCamera.fieldOfView = Mathf.Lerp(gunCamera.fieldOfView,
 					defaultFov,fovSpeed * Time.deltaTime);
 				
@@ -386,6 +409,8 @@ public class HandgunScriptLPFP : MonoBehaviour {
 					selfLight.enabled = false;
 				else
 					selfLight.enabled = true;
+				
+				shootAudioSource.PlayOneShot(clipFlashlight);
 			}
 
 			//If out of ammo
@@ -536,6 +561,10 @@ public class HandgunScriptLPFP : MonoBehaviour {
 					Spawnpoints.casingSpawnPoint.transform.position, 
 					Spawnpoints.casingSpawnPoint.transform.rotation);
 			}
+			else if(Input.GetMouseButtonDown (0) && outOfAmmo && !isReloading && !isInspecting && !isRunning && !holstered && canShoot) 
+			{
+				shootAudioSource.PlayOneShot(clipGunEmpty);
+			}
 
 			/*
 			//Inspect weapon when pressing T key
@@ -622,7 +651,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 			if(isAiming)
 			{
 				//When right click is released
-				crosshair.SetActive(true);
+				crosshair.color = Color.white;
 				gunCamera.fieldOfView = Mathf.Lerp(gunCamera.fieldOfView,
 					defaultFov,fovSpeed * Time.deltaTime);
 				
@@ -807,7 +836,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	private void UpdateAmmoText()
 	{
 		if(!holstered)
-			ammoText.text = "Ammo: " + currentAmmo + " | " + totalAmmo;
+			ammoText.text = currentAmmo + " | " + totalAmmo;
 	}
 }
 // ----- Low Poly FPS Pack Free Version -----

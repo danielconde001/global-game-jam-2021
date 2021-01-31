@@ -11,6 +11,7 @@ namespace FPSControllerLPFP
     public class FpsControllerLPFP : MonoBehaviour
     {
         [SerializeField] private HandgunScriptLPFP handgunScriptLPFP;
+        [SerializeField] private Transform armDeathTransform;
         [SerializeField] private bool canLook = true;
         public bool CanLook
         {
@@ -104,6 +105,13 @@ namespace FPSControllerLPFP
         private readonly RaycastHit[] _groundCastResults = new RaycastHit[8];
         private readonly RaycastHit[] _wallCastResults = new RaycastHit[8];
 
+        public void SetupDeath()
+        {
+            CanMove = false;
+            canLook = false;
+            arms.position = transform.position + transform.TransformVector(armDeathTransform.localPosition);
+        }
+
         /// Initializes the FpsController on start.
         private void Awake()
         {
@@ -186,8 +194,10 @@ namespace FPSControllerLPFP
         private void Update()
         {
             if(canLook)
+            {
                 RotateCameraAndCharacter();
                 arms.position = transform.position + transform.TransformVector(armPosition);
+            }
 
             PlayFootstepSounds();
 

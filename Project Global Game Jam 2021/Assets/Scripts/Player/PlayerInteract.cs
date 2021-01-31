@@ -9,6 +9,10 @@ public class PlayerInteract : MonoBehaviour
     [SerializeField] private LayerMask interactableLayer;
     [SerializeField] private float interactRange;
     [SerializeField] private bool canInteract = true;
+    public bool CanInteract
+    {
+        set {canInteract = value;}
+    }
 
     private Interactable storedInteractable;
 
@@ -32,21 +36,35 @@ public class PlayerInteract : MonoBehaviour
             {
                 if(hit.collider.gameObject.GetComponent<Interactable>() != null)
                 {
-                    if(storedInteractable == null)
+                    if(hit.collider.gameObject.GetComponent<Interactable>().CanInteract)
                     {
-                        hit.collider.gameObject.GetComponent<Interactable>().Select();
-                        playerInteractContext.ShowInteractContext(hit.collider.gameObject.GetComponent<Interactable>().UIContextPosition);
-                        storedInteractable = hit.collider.gameObject.GetComponent<Interactable>();
-                    }
-                    else
-                    {
-                        if(storedInteractable != hit.collider.gameObject.GetComponent<Interactable>())
+                        if(storedInteractable == null)
                         {
-                            storedInteractable.Unselect();
                             hit.collider.gameObject.GetComponent<Interactable>().Select();
                             playerInteractContext.ShowInteractContext(hit.collider.gameObject.GetComponent<Interactable>().UIContextPosition);
                             storedInteractable = hit.collider.gameObject.GetComponent<Interactable>();
                         }
+                        else
+                        {
+                            if(storedInteractable != hit.collider.gameObject.GetComponent<Interactable>())
+                            {
+                                storedInteractable.Unselect();
+                                hit.collider.gameObject.GetComponent<Interactable>().Select();
+                                playerInteractContext.ShowInteractContext(hit.collider.gameObject.GetComponent<Interactable>().UIContextPosition);
+                                storedInteractable = hit.collider.gameObject.GetComponent<Interactable>();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(storedInteractable != null)
+                        {
+                            storedInteractable.Unselect();
+                            storedInteractable = null;
+                        }
+
+                        if(!playerInteractContext.IsHidden)
+                            playerInteractContext.HideInteractContext();
                     }
                 }
                 else

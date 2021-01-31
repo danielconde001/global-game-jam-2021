@@ -129,7 +129,7 @@ MonoBehaviour:
   OnInteractUnlocked:
     m_PersistentCalls:
       m_Calls: []
-  unlocked: 0
+  unlocked: 1
 --- !u!114 &1309824052677230975
 MonoBehaviour:
   m_ObjectHideFlags: 0
