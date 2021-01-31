@@ -8,6 +8,11 @@ using TMPro;
 public class HandgunScriptLPFP : MonoBehaviour {
 	public static HandgunScriptLPFP current;
 	[SerializeField] private FpsControllerLPFP fpsControllerLPFP;
+	[SerializeField] private bool canUseGun = true;
+	public bool CanUseGun
+	{
+		set {canUseGun = value;}
+	}
 	[SerializeField] private Light selfLight;
 	[SerializeField] private LineRenderer selfLineRenderer;
 	[SerializeField] private LayerMask shootableLayer;
@@ -244,20 +249,23 @@ public class HandgunScriptLPFP : MonoBehaviour {
 
 	private void LateUpdate () {
 		//Weapon sway
-		if (weaponSway == true) {
-			float movementX = -Input.GetAxis ("Mouse X") * swayAmount;
-			float movementY = -Input.GetAxis ("Mouse Y") * swayAmount;
-			//Clamp movement to min and max values
-			movementX = Mathf.Clamp 
-				(movementX, -currentMaxSwayAmount, currentMaxSwayAmount);
-			movementY = Mathf.Clamp 
-				(movementY, -currentMaxSwayAmount, currentMaxSwayAmount);
-			//Lerp local pos
-			Vector3 finalSwayPosition = new Vector3 
-				(movementX, movementY, 0);
-			transform.localPosition = Vector3.Lerp 
-				(transform.localPosition, finalSwayPosition + 
-				initialSwayPosition, Time.deltaTime * swaySmoothValue);
+		if(canUseGun)
+		{
+			if (weaponSway == true) {
+				float movementX = -Input.GetAxis ("Mouse X") * swayAmount;
+				float movementY = -Input.GetAxis ("Mouse Y") * swayAmount;
+				//Clamp movement to min and max values
+				movementX = Mathf.Clamp 
+					(movementX, -currentMaxSwayAmount, currentMaxSwayAmount);
+				movementY = Mathf.Clamp 
+					(movementY, -currentMaxSwayAmount, currentMaxSwayAmount);
+				//Lerp local pos
+				Vector3 finalSwayPosition = new Vector3 
+					(movementX, movementY, 0);
+				transform.localPosition = Vector3.Lerp 
+					(transform.localPosition, finalSwayPosition + 
+					initialSwayPosition, Time.deltaTime * swaySmoothValue);
+			}
 		}
 	}
 	
@@ -265,346 +273,371 @@ public class HandgunScriptLPFP : MonoBehaviour {
 
 		//Aiming
 		//Toggle camera FOV when right click is held down
-		if(Input.GetButton("Fire2") && !isReloading && !isRunning && !isInspecting && !holstered) 
+		if(canUseGun)
 		{
-			crosshair.SetActive(false);
-			gunCamera.fieldOfView = Mathf.Lerp (gunCamera.fieldOfView,
-				aimFov, fovSpeed * Time.deltaTime);
-
-			playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, pcAimFov, fovSpeed * Time.deltaTime);
-			
-			currentMaxSwayAmount = aimMaxSwayAmount;
-			isAiming = true;
-
-			anim.SetBool ("Aim", true);
-
-			if (!soundHasPlayed) 
+			if(Input.GetButton("Fire2") && !isReloading && !isRunning && !isInspecting && !holstered) 
 			{
-				mainAudioSource.clip = SoundClips.aimSound;
-				mainAudioSource.Play ();
-	
-				soundHasPlayed = true;
-			}
-		} 
-		else 
-		{
-			//When right click is released
-			crosshair.SetActive(true);
-			gunCamera.fieldOfView = Mathf.Lerp(gunCamera.fieldOfView,
-				defaultFov,fovSpeed * Time.deltaTime);
-			
-			playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, pcDefaultFov, fovSpeed * Time.deltaTime);
+				crosshair.SetActive(false);
+				gunCamera.fieldOfView = Mathf.Lerp (gunCamera.fieldOfView,
+					aimFov, fovSpeed * Time.deltaTime);
 
-			currentMaxSwayAmount = maxSwayAmount;
-			isAiming = false;
-			soundHasPlayed = false;
-	
-			anim.SetBool ("Aim", false);
-		}
-		//Aiming end
-
-		//If randomize muzzleflash is true, genereate random int values
-		if (randomMuzzleflash == true) {
-			randomMuzzleflashValue = Random.Range (minRandomValue, maxRandomValue);
-		}
-
-		/*
-		//Timescale settings
-		//Change timescale to normal when 1 key is pressed
-		if (Input.GetKeyDown (KeyCode.Alpha1)) 
-		{
-			Time.timeScale = 1.0f;
-			timescaleText.text = "1.0";
-		}
-		//Change timescale to 50% when 2 key is pressed
-		if (Input.GetKeyDown (KeyCode.Alpha2)) 
-		{
-			Time.timeScale = 0.5f;
-			timescaleText.text = "0.5";
-		}
-		//Change timescale to 25% when 3 key is pressed
-		if (Input.GetKeyDown (KeyCode.Alpha3)) 
-		{
-			Time.timeScale = 0.25f;
-			timescaleText.text = "0.25";
-		}
-		//Change timescale to 10% when 4 key is pressed
-		if (Input.GetKeyDown (KeyCode.Alpha4)) 
-		{
-			Time.timeScale = 0.1f;
-			timescaleText.text = "0.1";
-		}
-		//Pause game when 5 key is pressed
-		if (Input.GetKeyDown (KeyCode.Alpha5)) 
-		{
-			Time.timeScale = 0.0f;
-			timescaleText.text = "0.0";
-		}
-		*/
-
-		//Set current ammo text from ammo int
-		currentAmmoText.text = currentAmmo.ToString ();
-
-		//Continosuly check which animation 
-		//is currently playing
-		AnimationCheck ();
-
-		/*
-		//Play knife attack 1 animation when Q key is pressed
-		if (Input.GetKeyDown (KeyCode.Q) && !isInspecting) 
-		{
-			anim.Play ("Knife Attack 1", 0, 0f);
-		}
-		//Play knife attack 2 animation when F key is pressed
-		if (Input.GetKeyDown (KeyCode.F) && !isInspecting) 
-		{
-			anim.Play ("Knife Attack 2", 0, 0f);
-		}
-			
-		//Throw grenade when pressing G key
-		if (Input.GetKeyDown (KeyCode.G) && !isInspecting) 
-		{
-			StartCoroutine (GrenadeSpawnDelay ());
-			//Play grenade throw animation
-			anim.Play("GrenadeThrow", 0, 0.0f);
-		}
-		*/
-
-		if(Input.GetKeyDown (KeyCode.F))
-		{
-			if(selfLight.enabled)
-				selfLight.enabled = false;
-			else
-				selfLight.enabled = true;
-		}
-
-		//If out of ammo
-		if (currentAmmo == 0) 
-		{
-			//Show out of ammo text
-			currentWeaponText.text = "OUT OF AMMO";
-			//Toggle bool
-			outOfAmmo = true;
-			//Auto reload if true
-			if (autoReload == true && !isReloading) 
-			{
-				StartCoroutine (AutoReload ());
-			}
+				playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, pcAimFov, fovSpeed * Time.deltaTime);
 				
-			//Set slider back
-			anim.SetBool ("Out Of Ammo Slider", true);
-			//Increase layer weight for blending to slider back pose
-			anim.SetLayerWeight (1, 1.0f);
-		} 
-		else 
-		{
-			//When ammo is full, show weapon name again
-			currentWeaponText.text = storedWeaponName.ToString ();
-			//Toggle bool
-			outOfAmmo = false;
-			//anim.SetBool ("Out Of Ammo", false);
-			anim.SetLayerWeight (1, 0.0f);
-		}
+				currentMaxSwayAmount = aimMaxSwayAmount;
+				isAiming = true;
 
-		//Shooting 
-		if (Input.GetMouseButton (0) && !outOfAmmo && !isReloading && !isInspecting && !isRunning && !holstered && canShoot) 
-		{
-			StartCoroutine(ShootDelayTimer());
-			anim.Play ("Fire", 0, 0f);
-	
-				
-			//Remove 1 bullet from ammo
-			currentAmmo -= 1;
-			UpdateAmmoText();
+				anim.SetBool ("Aim", true);
 
-			shootAudioSource.clip = SoundClips.shootSound;
-			shootAudioSource.Play ();
-
-			//Light flash start
-			StartCoroutine(MuzzleFlashLight());
-
-			if (!isAiming) //if not aiming
-			{
-				anim.Play ("Fire", 0, 0f);
-
-				if(enableMuzzleflash)
-					muzzleParticles.Emit (1);
-
-				if (enableSparks == true) 
+				if (!soundHasPlayed) 
 				{
-					//Emit random amount of spark particles
-					sparkParticles.Emit (Random.Range (minSparkEmission, maxSparkEmission + 1));
+					mainAudioSource.clip = SoundClips.aimSound;
+					mainAudioSource.Play ();
+		
+					soundHasPlayed = true;
 				}
 			} 
-			else //if aiming
+			else 
 			{
-				anim.Play ("Aim Fire", 0, 0f);
+				//When right click is released
+				crosshair.SetActive(true);
+				gunCamera.fieldOfView = Mathf.Lerp(gunCamera.fieldOfView,
+					defaultFov,fovSpeed * Time.deltaTime);
+				
+				playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, pcDefaultFov, fovSpeed * Time.deltaTime);
+
+				currentMaxSwayAmount = maxSwayAmount;
+				isAiming = false;
+				soundHasPlayed = false;
+		
+				anim.SetBool ("Aim", false);
+			}
+			//Aiming end
+
+			//If randomize muzzleflash is true, genereate random int values
+			if (randomMuzzleflash == true) {
+				randomMuzzleflashValue = Random.Range (minRandomValue, maxRandomValue);
+			}
+
+			/*
+			//Timescale settings
+			//Change timescale to normal when 1 key is pressed
+			if (Input.GetKeyDown (KeyCode.Alpha1)) 
+			{
+				Time.timeScale = 1.0f;
+				timescaleText.text = "1.0";
+			}
+			//Change timescale to 50% when 2 key is pressed
+			if (Input.GetKeyDown (KeyCode.Alpha2)) 
+			{
+				Time.timeScale = 0.5f;
+				timescaleText.text = "0.5";
+			}
+			//Change timescale to 25% when 3 key is pressed
+			if (Input.GetKeyDown (KeyCode.Alpha3)) 
+			{
+				Time.timeScale = 0.25f;
+				timescaleText.text = "0.25";
+			}
+			//Change timescale to 10% when 4 key is pressed
+			if (Input.GetKeyDown (KeyCode.Alpha4)) 
+			{
+				Time.timeScale = 0.1f;
+				timescaleText.text = "0.1";
+			}
+			//Pause game when 5 key is pressed
+			if (Input.GetKeyDown (KeyCode.Alpha5)) 
+			{
+				Time.timeScale = 0.0f;
+				timescaleText.text = "0.0";
+			}
+			*/
+
+			//Set current ammo text from ammo int
+			currentAmmoText.text = currentAmmo.ToString ();
+
+			//Continosuly check which animation 
+			//is currently playing
+			AnimationCheck ();
+
+			/*
+			//Play knife attack 1 animation when Q key is pressed
+			if (Input.GetKeyDown (KeyCode.Q) && !isInspecting) 
+			{
+				anim.Play ("Knife Attack 1", 0, 0f);
+			}
+			//Play knife attack 2 animation when F key is pressed
+			if (Input.GetKeyDown (KeyCode.F) && !isInspecting) 
+			{
+				anim.Play ("Knife Attack 2", 0, 0f);
+			}
+				
+			//Throw grenade when pressing G key
+			if (Input.GetKeyDown (KeyCode.G) && !isInspecting) 
+			{
+				StartCoroutine (GrenadeSpawnDelay ());
+				//Play grenade throw animation
+				anim.Play("GrenadeThrow", 0, 0.0f);
+			}
+			*/
+
+			if(Input.GetKeyDown (KeyCode.F))
+			{
+				if(selfLight.enabled)
+					selfLight.enabled = false;
+				else
+					selfLight.enabled = true;
+			}
+
+			//If out of ammo
+			if (currentAmmo == 0) 
+			{
+				//Show out of ammo text
+				currentWeaponText.text = "OUT OF AMMO";
+				//Toggle bool
+				outOfAmmo = true;
+				//Auto reload if true
+				if (autoReload == true && !isReloading) 
+				{
+					StartCoroutine (AutoReload ());
+				}
 					
-				//If random muzzle is false
-				if (!randomMuzzleflash) {
+				//Set slider back
+				anim.SetBool ("Out Of Ammo Slider", true);
+				//Increase layer weight for blending to slider back pose
+				anim.SetLayerWeight (1, 1.0f);
+			} 
+			else 
+			{
+				//When ammo is full, show weapon name again
+				currentWeaponText.text = storedWeaponName.ToString ();
+				//Toggle bool
+				outOfAmmo = false;
+				//anim.SetBool ("Out Of Ammo", false);
+				anim.SetLayerWeight (1, 0.0f);
+			}
+
+			//Shooting 
+			if (Input.GetMouseButton (0) && !outOfAmmo && !isReloading && !isInspecting && !isRunning && !holstered && canShoot) 
+			{
+				StartCoroutine(ShootDelayTimer());
+				anim.Play ("Fire", 0, 0f);
+		
+					
+				//Remove 1 bullet from ammo
+				currentAmmo -= 1;
+				UpdateAmmoText();
+
+				shootAudioSource.clip = SoundClips.shootSound;
+				shootAudioSource.Play ();
+
+				//Light flash start
+				StartCoroutine(MuzzleFlashLight());
+
+				if (!isAiming) //if not aiming
+				{
+					anim.Play ("Fire", 0, 0f);
+
 					if(enableMuzzleflash)
 						muzzleParticles.Emit (1);
-					//If random muzzle is true
-				} 
-				else if (randomMuzzleflash == true) 
-				{
-					//Only emit if random value is 1
-					if (randomMuzzleflashValue == 1) 
+
+					if (enableSparks == true) 
 					{
-						if (enableSparks == true) 
-						{
-							//Emit random amount of spark particles
-							sparkParticles.Emit (Random.Range (minSparkEmission, maxSparkEmission + 1));
-						}
-						if (enableMuzzleflash == true) 
-						{
+						//Emit random amount of spark particles
+						sparkParticles.Emit (Random.Range (minSparkEmission, maxSparkEmission + 1));
+					}
+				} 
+				else //if aiming
+				{
+					anim.Play ("Aim Fire", 0, 0f);
+						
+					//If random muzzle is false
+					if (!randomMuzzleflash) {
+						if(enableMuzzleflash)
 							muzzleParticles.Emit (1);
-							//Light flash start
-							StartCoroutine (MuzzleFlashLight ());
+						//If random muzzle is true
+					} 
+					else if (randomMuzzleflash == true) 
+					{
+						//Only emit if random value is 1
+						if (randomMuzzleflashValue == 1) 
+						{
+							if (enableSparks == true) 
+							{
+								//Emit random amount of spark particles
+								sparkParticles.Emit (Random.Range (minSparkEmission, maxSparkEmission + 1));
+							}
+							if (enableMuzzleflash == true) 
+							{
+								muzzleParticles.Emit (1);
+								//Light flash start
+								StartCoroutine (MuzzleFlashLight ());
+							}
 						}
 					}
 				}
-			}
-			//add recoil spread here
-			Vector3 recoil;
-			if(isAiming)
-				recoil = new Vector3(Random.Range(-maxAimRecoil, maxAimRecoil), Random.Range(-maxAimRecoil, maxAimRecoil), Random.Range(-maxAimRecoil, maxAimRecoil));
-			else
-				recoil = new Vector3(Random.Range(-maxRecoil, maxRecoil), Random.Range(-maxRecoil, maxRecoil), Random.Range(-maxRecoil, maxRecoil));
+				//add recoil spread here
+				Vector3 recoil;
+				if(isAiming)
+					recoil = new Vector3(Random.Range(-maxAimRecoil, maxAimRecoil), Random.Range(-maxAimRecoil, maxAimRecoil), Random.Range(-maxAimRecoil, maxAimRecoil));
+				else
+					recoil = new Vector3(Random.Range(-maxRecoil, maxRecoil), Random.Range(-maxRecoil, maxRecoil), Random.Range(-maxRecoil, maxRecoil));
 
-			selfLineRenderer.SetPosition(0, Spawnpoints.bulletSpawnPoint.position);
+				selfLineRenderer.SetPosition(0, Spawnpoints.bulletSpawnPoint.position);
 
-			RaycastHit hit;
-			if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward + recoil, out hit, 100.0f, shootableLayer))
-			{
-				//add hit calculation here
-				if(hit.collider != null)
+				RaycastHit hit;
+				if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward + recoil, out hit, 100.0f, shootableLayer))
 				{
-					if(hit.collider.gameObject.GetComponent<EntityHealth>() != null)
+					//add hit calculation here
+					if(hit.collider != null)
 					{
-						hit.collider.gameObject.GetComponent<EntityHealth>().TakeDamage(damage);
+						if(hit.collider.gameObject.GetComponent<EntityHealth>() != null)
+						{
+							hit.collider.gameObject.GetComponent<EntityHealth>().TakeDamage(damage);
 
-						if(hit.collider.gameObject.GetComponent<EnemyHealth>() != null || hit.collider.gameObject.GetComponent<ShootableHead>() != null )
-						{	
-							var q = Quaternion.FromToRotation(Vector3.forward, hit.normal);
-							GameObject FXclone = (GameObject)Instantiate(zombieBulletFX, hit.point, q);
+							if(hit.collider.gameObject.GetComponent<EnemyHealth>() != null || hit.collider.gameObject.GetComponent<ShootableHead>() != null )
+							{	
+								var q = Quaternion.FromToRotation(Vector3.forward, hit.normal);
+								GameObject FXclone = (GameObject)Instantiate(zombieBulletFX, hit.point, q);
+							}
+							else
+							{
+								var q = Quaternion.FromToRotation(Vector3.forward, hit.normal);
+								GameObject FXclone = (GameObject)Instantiate(woodBulletFX, hit.point, q);
+							}
+
 						}
 						else
 						{
 							var q = Quaternion.FromToRotation(Vector3.forward, hit.normal);
 							GameObject FXclone = (GameObject)Instantiate(woodBulletFX, hit.point, q);
 						}
+					}
 
-					}
-					else
-					{
-						var q = Quaternion.FromToRotation(Vector3.forward, hit.normal);
-						GameObject FXclone = (GameObject)Instantiate(woodBulletFX, hit.point, q);
-					}
+					selfLineRenderer.SetPosition(1, hit.point);
 				}
+				else
+				{
+					selfLineRenderer.SetPosition(1, (Spawnpoints.fakeBulletEndPoint.position + recoil));
+				}
+				/*
+				//Spawn bullet at bullet spawnpoint
+				var bullet = (Transform)Instantiate (
+					Prefabs.bulletPrefab,
+					Spawnpoints.bulletSpawnPoint.transform.position,
+					Spawnpoints.bulletSpawnPoint.transform.rotation);
 
-				selfLineRenderer.SetPosition(1, hit.point);
+				//Add velocity to the bullet
+				bullet.GetComponent<Rigidbody>().velocity = 
+				bullet.transform.forward * bulletForce;
+				*/
+
+				//Spawn casing prefab at spawnpoint
+				Instantiate (Prefabs.casingPrefab, 
+					Spawnpoints.casingSpawnPoint.transform.position, 
+					Spawnpoints.casingSpawnPoint.transform.rotation);
 			}
-			else
-			{
-				selfLineRenderer.SetPosition(1, (Spawnpoints.fakeBulletEndPoint.position + recoil));
-			}
+
 			/*
-			//Spawn bullet at bullet spawnpoint
-			var bullet = (Transform)Instantiate (
-				Prefabs.bulletPrefab,
-				Spawnpoints.bulletSpawnPoint.transform.position,
-				Spawnpoints.bulletSpawnPoint.transform.rotation);
+			//Inspect weapon when pressing T key
+			if (Input.GetKeyDown (KeyCode.T)) 
+			{
+				anim.SetTrigger ("Inspect");
+			}
 
-			//Add velocity to the bullet
-			bullet.GetComponent<Rigidbody>().velocity = 
-			bullet.transform.forward * bulletForce;
+			//Toggle weapon holster when pressing E key
+			if (Input.GetKeyDown (KeyCode.E) && !hasBeenHolstered) 
+			{
+				holstered = true;
+
+				mainAudioSource.clip = SoundClips.holsterSound;
+				mainAudioSource.Play();
+
+				hasBeenHolstered = true;
+			} 
+			else if (Input.GetKeyDown (KeyCode.E) && hasBeenHolstered) 
+			{
+				holstered = false;
+
+				mainAudioSource.clip = SoundClips.takeOutSound;
+				mainAudioSource.Play ();
+
+				hasBeenHolstered = false;
+			}
 			*/
 
-			//Spawn casing prefab at spawnpoint
-			Instantiate (Prefabs.casingPrefab, 
-				Spawnpoints.casingSpawnPoint.transform.position, 
-				Spawnpoints.casingSpawnPoint.transform.rotation);
-		}
-
-		/*
-		//Inspect weapon when pressing T key
-		if (Input.GetKeyDown (KeyCode.T)) 
-		{
-			anim.SetTrigger ("Inspect");
-		}
-
-		//Toggle weapon holster when pressing E key
-		if (Input.GetKeyDown (KeyCode.E) && !hasBeenHolstered) 
-		{
-			holstered = true;
-
-			mainAudioSource.clip = SoundClips.holsterSound;
-			mainAudioSource.Play();
-
-			hasBeenHolstered = true;
-		} 
-		else if (Input.GetKeyDown (KeyCode.E) && hasBeenHolstered) 
-		{
-			holstered = false;
-
-			mainAudioSource.clip = SoundClips.takeOutSound;
-			mainAudioSource.Play ();
-
-			hasBeenHolstered = false;
-		}
-		*/
-
-		//Holster anim toggle
-		if (holstered == true) 
-		{
-			anim.SetBool ("Holster", true);
-		} 
-		else 
-		{
-			anim.SetBool ("Holster", false);
-		}
-
-		//Reload 
-		if (Input.GetKeyDown (KeyCode.R) && !isReloading && !isInspecting && !holstered && totalAmmo > 0 && currentAmmo < ammo)
-		{
-			//Reload
-			Reload ();
-
-			if (!hasStartedSliderBack) 
+			//Holster anim toggle
+			if (holstered == true) 
 			{
-				hasStartedSliderBack = true;
-				StartCoroutine (HandgunSliderBackDelay());
+				anim.SetBool ("Holster", true);
+			} 
+			else 
+			{
+				anim.SetBool ("Holster", false);
+			}
+
+			//Reload 
+			if (Input.GetKeyDown (KeyCode.R) && !isReloading && !isInspecting && !holstered && totalAmmo > 0 && currentAmmo < ammo)
+			{
+				//Reload
+				Reload ();
+
+				if (!hasStartedSliderBack) 
+				{
+					hasStartedSliderBack = true;
+					StartCoroutine (HandgunSliderBackDelay());
+				}
+			}
+
+			/*
+			//Walking when pressing down WASD keys
+			if (Input.GetKey (KeyCode.W) && !isRunning || 
+				Input.GetKey (KeyCode.A) && !isRunning || 
+				Input.GetKey (KeyCode.S) && !isRunning || 
+				Input.GetKey (KeyCode.D) && !isRunning) 
+			{
+				anim.SetBool ("Walk", true);
+			} else {
+				anim.SetBool ("Walk", false);
+			}
+			*/
+			anim.SetBool("Walk", fpsControllerLPFP.IsMoving);
+
+			//Running when pressing down W and Left Shift key
+			if (fpsControllerLPFP.CanRun && (Input.GetKey (KeyCode.W) && Input.GetKey (KeyCode.LeftShift)) && !isAiming && !isReloading && fpsControllerLPFP.IsMoving) 
+			{
+				isRunning = true;
+			} else {
+				isRunning = false;
+			}
+			
+			//Run anim toggle
+			if (isRunning == true) {
+				anim.SetBool ("Run", true);
+			} else {
+				anim.SetBool ("Run", false);
 			}
 		}
-
-		/*
-		//Walking when pressing down WASD keys
-		if (Input.GetKey (KeyCode.W) && !isRunning || 
-			Input.GetKey (KeyCode.A) && !isRunning || 
-			Input.GetKey (KeyCode.S) && !isRunning || 
-			Input.GetKey (KeyCode.D) && !isRunning) 
+		else
 		{
-			anim.SetBool ("Walk", true);
-		} else {
-			anim.SetBool ("Walk", false);
-		}
-		*/
-		anim.SetBool("Walk", fpsControllerLPFP.IsMoving);
+			if(isAiming)
+			{
+				//When right click is released
+				crosshair.SetActive(true);
+				gunCamera.fieldOfView = Mathf.Lerp(gunCamera.fieldOfView,
+					defaultFov,fovSpeed * Time.deltaTime);
+				
+				playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, pcDefaultFov, fovSpeed * Time.deltaTime);
 
-		//Running when pressing down W and Left Shift key
-		if (fpsControllerLPFP.CanRun && (Input.GetKey (KeyCode.W) && Input.GetKey (KeyCode.LeftShift)) && !isAiming && !isReloading && fpsControllerLPFP.IsMoving) 
-		{
-			isRunning = true;
-		} else {
-			isRunning = false;
-		}
+				currentMaxSwayAmount = maxSwayAmount;
+				isAiming = false;
+				soundHasPlayed = false;
 		
-		//Run anim toggle
-		if (isRunning == true) {
-			anim.SetBool ("Run", true);
-		} else {
+				anim.SetBool ("Aim", false);
+			}
+
+			isRunning = false;
 			anim.SetBool ("Run", false);
+			anim.SetBool("Walk", fpsControllerLPFP.IsMoving);
 		}
 	}
 
