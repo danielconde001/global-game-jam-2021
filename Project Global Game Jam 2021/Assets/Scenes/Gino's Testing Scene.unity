@@ -452,22 +452,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebb9e2666882e3b4485c233061668f6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  url: https://www.youtube.com/watch?v=dQw4w9WgXcQ
   faderImage: {fileID: 1925906379961670429}
   handgunScriptLPFP: {fileID: 1925906379961670428}
   fpsControllerLPFP: {fileID: 1925906379961670431}
   playerHealth: {fileID: 1925906379961670430}
   navMeshSurface: {fileID: 521976066}
-  timesNormalRoomSpawns: 999
+  timesNormalRoomSpawns: 3
   spawnPoint: {fileID: 521976065}
   normalRooms:
   - {fileID: 6704879690681570399, guid: e46df4a61a56a8c43b07e8191ebdff33, type: 3}
   - {fileID: 6704879690681570399, guid: 847264884b04b9543bcaa583a191a3b9, type: 3}
   - {fileID: 6704879690681570399, guid: 3eda6ec658811004fb0808be971fceba, type: 3}
   keyRooms:
-  - {fileID: 6704879690681570399, guid: 3eda6ec658811004fb0808be971fceba, type: 3}
-  - {fileID: 6704879690681570399, guid: 3eda6ec658811004fb0808be971fceba, type: 3}
-  - {fileID: 6704879690681570399, guid: 3eda6ec658811004fb0808be971fceba, type: 3}
-  finalRoom: {fileID: 0}
+  - {fileID: 6704879690681570399, guid: e48fd44658237a747bf30dcb386dc269, type: 3}
+  - {fileID: 6704879690681570399, guid: 3f536952b59e7ae4ca67b50bd915202c, type: 3}
+  - {fileID: 6704879690681570399, guid: 43494f0780e527b41860ab35fc23a9b6, type: 3}
+  finalRoom: {fileID: 6704879690681570399, guid: 171ae395997f41e41b91b12fcc931337,
+    type: 3}
 --- !u!4 &521976065
 Transform:
   m_ObjectHideFlags: 0

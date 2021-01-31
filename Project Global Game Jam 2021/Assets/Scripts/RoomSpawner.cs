@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class RoomSpawner : MonoBehaviour
 {
+    public static RoomSpawner current;
+    [SerializeField] private string url;
     [SerializeField] private Image faderImage;
     [SerializeField] private HandgunScriptLPFP handgunScriptLPFP;
     [SerializeField] private FpsControllerLPFP fpsControllerLPFP;
@@ -31,8 +33,15 @@ public class RoomSpawner : MonoBehaviour
         StartCoroutine(SpawnTheRoom());
     }
 
+    public void PlayRickRoll()
+    {
+        Application.OpenURL(url);
+    }
+
     private void Awake()
     {
+        current = this;
+
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         fadeToBlackTween = faderImage.DOColor(Color.black, 1.0f);
         fadeToBlackTween.Pause();
@@ -67,13 +76,22 @@ public class RoomSpawner : MonoBehaviour
             }
             else
             {
-                //spawn keyRoom
-                keyRoomCounter++;
+                if(storedRoomClone != null)
+                {
+                    Destroy(storedRoomClone);
+                    navMeshSurface.BuildNavMesh();
+                }
+                StartCoroutine(SpawnKeyRoomFix());
             }
         }
         else
         {
-            //spawn finalRoom
+            if(storedRoomClone != null)
+            {
+                Destroy(storedRoomClone);
+                navMeshSurface.BuildNavMesh();
+            }
+            StartCoroutine(SpawnFinalRoomFix());
         }
     }
 
@@ -88,6 +106,44 @@ public class RoomSpawner : MonoBehaviour
         playerTransform.rotation = room.PlayerSpawnPoint.rotation;
         navMeshSurface.BuildNavMesh();
         normalRoomCounter++;
+
+        fadeToClearTween.Rewind();
+        fadeToClearTween.Play();
+        handgunScriptLPFP.CanUseGun = true;
+        fpsControllerLPFP.CanLook = true;
+        fpsControllerLPFP.CanMove = true;
+        playerHealth.IsInvulnerable = false;
+    }
+    private IEnumerator SpawnKeyRoomFix()
+    {
+        yield return new WaitForEndOfFrame();
+        GameObject roomClone = (GameObject)Instantiate(keyRooms[keyRoomCounter], spawnPoint.transform.position, spawnPoint.transform.rotation);
+        storedRoomClone = roomClone;
+        Room room = roomClone.GetComponent<Room>();
+        room.RoomSpawner = this;
+        playerTransform.position = room.PlayerSpawnPoint.position;
+        playerTransform.rotation = room.PlayerSpawnPoint.rotation;
+        navMeshSurface.BuildNavMesh();
+        keyRoomCounter++;
+
+        fadeToClearTween.Rewind();
+        fadeToClearTween.Play();
+        handgunScriptLPFP.CanUseGun = true;
+        fpsControllerLPFP.CanLook = true;
+        fpsControllerLPFP.CanMove = true;
+        playerHealth.IsInvulnerable = false;
+    }
+
+    private IEnumerator SpawnFinalRoomFix()
+    {
+        yield return new WaitForEndOfFrame();
+        GameObject roomClone = (GameObject)Instantiate(finalRoom, spawnPoint.transform.position, spawnPoint.transform.rotation);
+        storedRoomClone = roomClone;
+        Room room = roomClone.GetComponent<Room>();
+        room.RoomSpawner = this;
+        playerTransform.position = room.PlayerSpawnPoint.position;
+        playerTransform.rotation = room.PlayerSpawnPoint.rotation;
+        navMeshSurface.BuildNavMesh();
 
         fadeToClearTween.Rewind();
         fadeToClearTween.Play();
