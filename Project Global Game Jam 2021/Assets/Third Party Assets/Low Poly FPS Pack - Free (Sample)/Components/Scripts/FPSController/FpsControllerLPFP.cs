@@ -11,6 +11,26 @@ namespace FPSControllerLPFP
     public class FpsControllerLPFP : MonoBehaviour
     {
         [SerializeField] private HandgunScriptLPFP handgunScriptLPFP;
+        [SerializeField] private bool canLook = true;
+        public bool CanLook
+        {
+            set {canLook = value;}
+        }
+        [SerializeField] private bool canMove = true;
+        public bool CanMove
+        {
+            set 
+            {
+                canMove = value;
+                if(!canMove)
+                {
+                    _rigidbody.velocity = Vector3.zero;
+                    isMoving = false;
+                    _velocityX.Current = 0.0f;
+                    _velocityZ.Current = 0.0f;
+                }
+            }
+        }
 
 #pragma warning disable 649
 		[Header("Arms")]
@@ -85,9 +105,13 @@ namespace FPSControllerLPFP
         private readonly RaycastHit[] _wallCastResults = new RaycastHit[8];
 
         /// Initializes the FpsController on start.
-        private void Start()
+        private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+        }
+
+        private void Start()
+        {
             _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             _collider = GetComponent<CapsuleCollider>();
             _audioSource = GetComponent<AudioSource>();
@@ -152,15 +176,19 @@ namespace FPSControllerLPFP
         {
             // FixedUpdate is used instead of Update because this code is dealing with physics and smoothing.
             //RotateCameraAndCharacter();
-            MoveCharacter();
+            if(canMove)
+                MoveCharacter();
+            
             _isGrounded = false;
         }
 			
         /// Moves the camera to the character, processes jumping and plays sounds every frame.
         private void Update()
         {
-            arms.position = transform.position + transform.TransformVector(armPosition);
-            RotateCameraAndCharacter();
+            if(canLook)
+                RotateCameraAndCharacter();
+                arms.position = transform.position + transform.TransformVector(armPosition);
+
             PlayFootstepSounds();
 
             if(canJump)
@@ -235,7 +263,6 @@ namespace FPSControllerLPFP
                 else
                     velocity = worldDirection * runningSpeed;
             }
-
 
             //Checks for collisions so that the character does not stuck when jumping against walls.
             var intersectsWall = CheckCollisionsWithWalls(velocity);

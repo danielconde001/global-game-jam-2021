@@ -6,6 +6,10 @@ public class EntityHealth : MonoBehaviour
 {
     [SerializeField] protected int totalHealth;
     [SerializeField] protected bool isInvulnerable = false;
+    public bool IsInvulnerable
+    {
+        set {isInvulnerable = value;}
+    }
 
     protected int currentHealth;
 
