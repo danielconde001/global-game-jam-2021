@@ -47,7 +47,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1722275051
 Transform:
   m_ObjectHideFlags: 0
@@ -93,7 +93,19 @@ MonoBehaviour:
   interactDelay: 0.2
   OnInteractLocked:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1722275052}
+        m_MethodName: ShowText
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: There's got to be an easier way to bring this body to
+            that safe.
+          m_BoolArgument: 0
+        m_CallState: 2
   OnInteractUnlocked:
     m_PersistentCalls:
       m_Calls:
@@ -209,15 +221,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b255639d492aad44be5ec2d2a1cc889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _UIContextPosition: {fileID: 0}
+  _UIContextPosition: {fileID: 257535376}
   canInteract: 1
   interactDelay: 0.2
   OnInteractLocked:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 238956988}
+        m_MethodName: ShowText
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: The stench is unbearable...
+          m_BoolArgument: 0
+        m_CallState: 2
   OnInteractUnlocked:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 238956988}
+        m_MethodName: ShowText
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: He must be the owner of this room..
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8467746680773852010
 GameObject:
   m_ObjectHideFlags: 0

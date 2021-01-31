@@ -21,4 +21,9 @@ public class LockedInteractable : Interactable
     {
         locked = false;
     }
+
+    public void ShowText(string interactText)
+    {
+        PlayerInteractContext.current.ShowText(interactText);
+    }
 }
