@@ -598,7 +598,7 @@ MonoBehaviour:
   playerHealth: {fileID: 1925906379961670430}
   playerInteract: {fileID: 1629314844}
   navMeshSurface: {fileID: 521976066}
-  timesNormalRoomSpawns: 1
+  timesNormalRoomSpawns: 3
   spawnPoint: {fileID: 521976065}
   normalRooms:
   - {fileID: 6704879690681570399, guid: 4bfdc6899ee18f143b63fe1e36992df6, type: 3}
