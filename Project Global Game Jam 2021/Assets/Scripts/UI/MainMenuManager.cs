@@ -7,8 +7,7 @@ using UnityEngine.SceneManagement;
 public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] float ButtonEnlargeValue;
-
-    [SerializeField] Scene firstScene;
+    [SerializeField] string sceneName;
     [SerializeField] Button playButton;
     [SerializeField] Button quitButton;
 
@@ -39,6 +38,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void PlayGame()
     {
-        SceneManager.LoadScene(firstScene.name);
+        SceneManager.LoadScene(sceneName);
     }
 }

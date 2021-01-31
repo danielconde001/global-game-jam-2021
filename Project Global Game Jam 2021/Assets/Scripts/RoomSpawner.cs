@@ -41,6 +41,7 @@ public class RoomSpawner : MonoBehaviour
     private void Awake()
     {
         current = this;
+        Cursor.visible = false;
 
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         fadeToBlackTween = faderImage.DOColor(Color.black, 1.0f);
@@ -63,6 +64,7 @@ public class RoomSpawner : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
+        /*
         if(keyRoomCounter < keyRooms.Count)
         {
             if(normalRoomCounter < timesNormalRoomSpawns)
@@ -93,6 +95,27 @@ public class RoomSpawner : MonoBehaviour
             }
             StartCoroutine(SpawnFinalRoomFix());
         }
+        */
+
+        if(normalRoomCounter < timesNormalRoomSpawns)
+        {
+            if(storedRoomClone != null)
+            {
+                Destroy(storedRoomClone);
+                navMeshSurface.BuildNavMesh();
+            }
+             StartCoroutine(SpawnRoomFix());
+        }
+        else
+        {
+            if(storedRoomClone != null)
+            {
+                Destroy(storedRoomClone);
+                navMeshSurface.BuildNavMesh();
+            }
+            StartCoroutine(SpawnFinalRoomFix());
+        }
+        
     }
 
     private IEnumerator SpawnRoomFix()

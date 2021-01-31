@@ -557,8 +557,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonEnlargeValue: 1.2
-  firstScene:
-    m_Handle: 0
+  sceneName: Gino's Testing Scene
   playButton: {fileID: 2057452478}
   quitButton: {fileID: 356664714}
 --- !u!4 &690615244
