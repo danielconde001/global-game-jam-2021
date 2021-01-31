@@ -7,6 +7,7 @@ using DG.Tweening;
 
 public class PlayerHealth : EntityHealth
 {
+    public static PlayerHealth current;
     [SerializeField] private PostProcessVolume postProcessVolume;
     [SerializeField] private TextMeshProUGUI healthText;
 
@@ -21,13 +22,21 @@ public class PlayerHealth : EntityHealth
         damageFX.Rewind();
         damageFX.Play();
         
-        healthText.text = "Health: " + currentHealth;
+        UpdateHealthText();
+    }
+
+    public override void TakeHealing(int heal)
+    {
+        base.TakeHealing(heal);
+
+        UpdateHealthText();
     }
 
     protected override void Start()
     {
         base.Start();
 
+        current = this;
         postProcessVolume.profile.TryGetSettings(out vignette);
         postProcessVolume.profile.TryGetSettings(out chromaticAberration);
 
@@ -40,11 +49,16 @@ public class PlayerHealth : EntityHealth
         damageFX.Insert(0.1f, DOTween.To(()=> chromaticAberration.intensity.value, x=> chromaticAberration.intensity.value = x, 0.0f, 0.9f));
         damageFX.Pause();
 
-        healthText.text = "Health: " + currentHealth;
+        UpdateHealthText();
     }
 
     protected override void Death()
     {
         Debug.Log("You dieded!");
+    }
+
+    protected void UpdateHealthText()
+    {
+        healthText.text = "Health: " + currentHealth;
     }
 }

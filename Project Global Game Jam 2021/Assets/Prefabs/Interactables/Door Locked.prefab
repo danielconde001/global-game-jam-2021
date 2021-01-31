@@ -109,3 +109,4 @@ MonoBehaviour:
   _UIContextPosition: {fileID: 5608088868255020416}
   canInteract: 1
   interactDelay: 1
+  lockedText: The door won't budge.

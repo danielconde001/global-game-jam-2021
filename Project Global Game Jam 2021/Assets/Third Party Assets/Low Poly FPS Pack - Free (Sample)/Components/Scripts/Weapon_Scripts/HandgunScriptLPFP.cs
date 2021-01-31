@@ -89,6 +89,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 
 	//How much ammo is currently left
 	private int currentAmmo;
+	private int totalAmmo;
 	//Totalt amount of ammo
 	[Tooltip("How much ammo the weapon should have.")]
 	public int ammo;
@@ -179,6 +180,12 @@ public class HandgunScriptLPFP : MonoBehaviour {
 	public soundClips SoundClips;
 
 	private bool soundHasPlayed = false;
+
+	public void GiveAmmo(int amount)
+	{
+		totalAmmo += amount;
+		UpdateAmmoText();
+	}
 
 	public void HolsterGun()
 	{
@@ -477,10 +484,15 @@ public class HandgunScriptLPFP : MonoBehaviour {
 					{
 						hit.collider.gameObject.GetComponent<EntityHealth>().TakeDamage(damage);
 
-						if(hit.collider.gameObject.GetComponent<EnemyHealth>() != null)
+						if(hit.collider.gameObject.GetComponent<EnemyHealth>() != null || hit.collider.gameObject.GetComponent<ShootableHead>() != null )
 						{	
 							var q = Quaternion.FromToRotation(Vector3.forward, hit.normal);
 							GameObject FXclone = (GameObject)Instantiate(zombieBulletFX, hit.point, q);
+						}
+						else
+						{
+							var q = Quaternion.FromToRotation(Vector3.forward, hit.normal);
+							GameObject FXclone = (GameObject)Instantiate(woodBulletFX, hit.point, q);
 						}
 
 					}
@@ -554,7 +566,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		}
 
 		//Reload 
-		if (Input.GetKeyDown (KeyCode.R) && !isReloading && !isInspecting && !holstered && currentAmmo < ammo) 
+		if (Input.GetKeyDown (KeyCode.R) && !isReloading && !isInspecting && !holstered && totalAmmo > 0 && currentAmmo < ammo)
 		{
 			//Reload
 			Reload ();
@@ -581,7 +593,7 @@ public class HandgunScriptLPFP : MonoBehaviour {
 		anim.SetBool("Walk", fpsControllerLPFP.IsMoving);
 
 		//Running when pressing down W and Left Shift key
-		if (fpsControllerLPFP.CanRun && (Input.GetKey (KeyCode.W) && Input.GetKey (KeyCode.LeftShift)) && !isAiming && !isReloading) 
+		if (fpsControllerLPFP.CanRun && (Input.GetKey (KeyCode.W) && Input.GetKey (KeyCode.LeftShift)) && !isAiming && !isReloading && fpsControllerLPFP.IsMoving) 
 		{
 			isRunning = true;
 		} else {
@@ -688,7 +700,23 @@ public class HandgunScriptLPFP : MonoBehaviour {
 			}
 		}
 		//Restore ammo when reloading
-		currentAmmo = ammo;
+		if(currentAmmo > 0)
+		{
+			totalAmmo += currentAmmo;
+			currentAmmo = 0;
+		}
+		
+		if(totalAmmo > ammo)
+		{
+			currentAmmo = ammo;
+			totalAmmo -= ammo;
+		}
+		else
+		{
+			currentAmmo = totalAmmo;
+			totalAmmo = 0;
+		}
+
 		outOfAmmo = false;
 		UpdateAmmoText();
 	}
@@ -745,7 +773,8 @@ public class HandgunScriptLPFP : MonoBehaviour {
 
 	private void UpdateAmmoText()
 	{
-		ammoText.text = "Ammo: " + currentAmmo + " | inf";
+		if(!holstered)
+			ammoText.text = "Ammo: " + currentAmmo + " | " + totalAmmo;
 	}
 }
 // ----- Low Poly FPS Pack Free Version -----
