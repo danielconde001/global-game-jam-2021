@@ -14,6 +14,7 @@ public class PlayerHealth : EntityHealth
     private Vignette vignette;
     private ChromaticAberration chromaticAberration;
     private Sequence damageFX;
+    private Sequence healingFX;
 
     public override void TakeDamage(int damage)
     {
@@ -28,6 +29,9 @@ public class PlayerHealth : EntityHealth
     public override void TakeHealing(int heal)
     {
         base.TakeHealing(heal);
+
+        healingFX.Rewind();
+        healingFX.Play();
 
         UpdateHealthText();
     }
@@ -48,6 +52,13 @@ public class PlayerHealth : EntityHealth
         damageFX.Insert(0.1f, DOTween.To(()=> vignette.color.value, x=> vignette.color.value = x, Color.black, 0.9f));
         damageFX.Insert(0.1f, DOTween.To(()=> chromaticAberration.intensity.value, x=> chromaticAberration.intensity.value = x, 0.0f, 0.9f));
         damageFX.Pause();
+
+        healingFX = DOTween.Sequence();
+        healingFX.Append(DOTween.To(()=> vignette.intensity.value, x=> vignette.intensity.value = x, 1.0f, 0.1f));
+        healingFX.Insert(0.0f, DOTween.To(()=> vignette.color.value, x=> vignette.color.value = x, Color.green, 0.1f));
+        healingFX.Append(DOTween.To(()=> vignette.intensity.value, x=> vignette.intensity.value = x, 0.5f, 0.9f));
+        healingFX.Insert(0.1f, DOTween.To(()=> vignette.color.value, x=> vignette.color.value = x, Color.black, 0.9f));
+        healingFX.Pause();
 
         UpdateHealthText();
     }
