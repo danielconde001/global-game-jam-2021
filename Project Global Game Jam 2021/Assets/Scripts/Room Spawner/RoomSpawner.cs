@@ -9,6 +9,27 @@ using UnityEngine.SceneManagement;
 
 public class RoomSpawner : MonoBehaviour
 {
+    #region Singleton
+    private static RoomSpawner instance;
+    public static RoomSpawner Instance
+    {
+        get 
+        {
+            if (!GameObject.FindObjectOfType<RoomSpawner>())
+            {
+                GameObject newGameObject = new GameObject("RoomSpawner");
+                instance =  newGameObject.AddComponent<RoomSpawner>();
+            }
+            else if (GameObject.FindObjectOfType<RoomSpawner>()) 
+            {
+                instance = GameObject.FindObjectOfType<RoomSpawner>();
+            }
+            
+            return instance;
+        }
+    }
+    #endregion
+
     public static RoomSpawner current;
     [SerializeField] private string url;
     [SerializeField] private Image faderImage;
@@ -53,6 +74,8 @@ public class RoomSpawner : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
+
         current = this;
         Cursor.visible = false;
 

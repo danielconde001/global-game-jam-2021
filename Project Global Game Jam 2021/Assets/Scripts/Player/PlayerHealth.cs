@@ -76,6 +76,7 @@ public class PlayerHealth : EntityHealth
 
     protected override void Death()
     {
+        PauseMenuManager.Instance.CanPause = false;
         UpdateHealthText();
         isInvulnerable = true;
         selfAudioSource.PlayOneShot(playerDeath);
