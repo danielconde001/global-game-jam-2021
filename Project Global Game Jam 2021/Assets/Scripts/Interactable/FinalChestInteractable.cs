@@ -11,6 +11,7 @@ public class FinalChestInteractable : Interactable
     {
         if(canInteract)
         {
+            GameManager.Instance.PauseMenuManager.CanPause = false;
             RoomSpawner.current.PlayRickRoll();
             selfAudioSource.clip = clipChestOpen;
             selfAudioSource.Play();
