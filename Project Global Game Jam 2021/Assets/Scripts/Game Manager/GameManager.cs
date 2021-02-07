@@ -27,10 +27,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PauseMenuManager pauseMenuManager;
     [SerializeField] private RoomSpawner roomSpawner;
     [SerializeField] private PlayerManager playerManager;
+    [SerializeField] private AudioManager audioManager;
 
     public PauseMenuManager PauseMenuManager { get => pauseMenuManager; }
     public RoomSpawner RoomSpawner { get => roomSpawner; }
     public PlayerManager PlayerManager { get => playerManager; }
+    public AudioManager AudioManager { get => audioManager; }
 
     private void Awake() {
         instance = this;
@@ -73,6 +75,15 @@ public class GameManager : MonoBehaviour
             {
                 GameObject newGameObject = Instantiate(Resources.Load("Player Manager")) as GameObject;
                 playerManager =  newGameObject.GetComponent<PlayerManager>();
+            }
+        }
+        if (!audioManager) 
+        {
+            if (FindObjectOfType<AudioManager>()) audioManager = FindObjectOfType<AudioManager>();
+            else 
+            {
+                GameObject newGameObject = Instantiate(Resources.Load("Audio Manager")) as GameObject;
+                audioManager =  newGameObject.GetComponent<AudioManager>();
             }
         }
     }

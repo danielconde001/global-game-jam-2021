@@ -4,50 +4,30 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 public class PauseMenuManager : MonoBehaviour
 {
-    // SINGELTON PRIVILEGES NOW DEFUNCT
-    #region Singleton
-    /*
-    private static PauseMenuManager instance;
-    public static PauseMenuManager Instance
-    {
-        get 
-        {
-            if (!GameObject.FindObjectOfType<PauseMenuManager>())
-            {
-                GameObject newGameObject = Instantiate(Resources.Load("Pause Menu Manager")) as GameObject;
-                
-                if (!newGameObject.GetComponent<PauseMenuManager>())
-                    instance =  newGameObject.AddComponent<PauseMenuManager>();
-
-                else { instance = newGameObject.GetComponent<PauseMenuManager>(); }
-            }
-            else if (GameObject.FindObjectOfType<PauseMenuManager>()) 
-            {
-                instance = GameObject.FindObjectOfType<PauseMenuManager>();
-            }
-            return instance;
-        }
-    }
-    */
-    #endregion
-    
+    enum PauseMenuWindow { Off, PauseMenu, Settings, AreYouSure, Count }
     [SerializeField] private KeyCode pauseKey = KeyCode.Escape;
-    private Canvas pauseMenuCanvas;
+    [SerializeField] private Canvas pauseMenuCanvas;
+    [SerializeField] private Canvas settingsCanvas;
+    [SerializeField] private AudioMixer mainMixer;
+    [SerializeField] private UnityEngine.UI.Text volumeText;
+    [SerializeField] private Slider volumeSlider;
+    [SerializeField] private UnityEngine.UI.Text mouseSensitivityText;
+    [SerializeField] private Slider mouseSensitivitySlider;
+    [SerializeField] private UnityEngine.UI.Text volumeInputText;
 
     bool canPause = true; 
+    PauseMenuWindow currentWindow = PauseMenuWindow.Off;
+
     public bool CanPause { 
         get { return canPause; } 
         set { canPause = value; }
     }
 
     bool paused = false;
-
-    private void Awake() {
-        pauseMenuCanvas = GetComponentInChildren<Canvas>();    
-    }
 
     private void Start() {
         canPause = true;    
@@ -57,13 +37,18 @@ public class PauseMenuManager : MonoBehaviour
 
         if (!canPause) return;
 
-        if (Input.GetKeyDown(pauseKey) && !paused) Pause();
-        else if (Input.GetKeyDown(pauseKey) && paused) Unpause();
+        if (Input.GetKeyDown(pauseKey))
+        {
+            if (currentWindow == PauseMenuWindow.Off) Pause();
+            else if (currentWindow == PauseMenuWindow.PauseMenu) Unpause();
+            else if (currentWindow == PauseMenuWindow.Settings) BackToPauseMenu();
+            else if (currentWindow == PauseMenuWindow.AreYouSure) BackToPauseMenu();
+        }
     }
 
     public void Pause()
     {
-        paused = true;
+        currentWindow = PauseMenuWindow.PauseMenu;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
         GameManager.Instance.PlayerManager.FpsController.enabled = false;
@@ -77,7 +62,7 @@ public class PauseMenuManager : MonoBehaviour
 
     public void Unpause()
     {
-        paused = false;
+        currentWindow = PauseMenuWindow.Off;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         GameManager.Instance.PlayerManager.FpsController.enabled = true;
@@ -89,7 +74,7 @@ public class PauseMenuManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    public void AreYouSurePrompt()
+    public void GoToAreYouSurePrompt()
     {
         //disable parent canvas
 
@@ -99,13 +84,52 @@ public class PauseMenuManager : MonoBehaviour
 
     public void BackToPauseMenu()
     {
-        //enable parent canvas
+        pauseMenuCanvas.enabled = true;
 
-        //disable areyousure canvas
+        if (currentWindow == PauseMenuWindow.Settings) 
+        { 
+            currentWindow = PauseMenuWindow.PauseMenu;
+            settingsCanvas.enabled = false;
+        }
+
+        if (currentWindow == PauseMenuWindow.AreYouSure)
+        {
+
+        }
     }
 
     public void GoToMainMenu()
     {
         SceneManager.LoadScene("Main Menu");
+    }
+
+    public void GoToSettings()
+    {
+        settingsCanvas.enabled = true;
+        pauseMenuCanvas.enabled = false;
+        currentWindow = PauseMenuWindow.Settings;
+    }
+
+    public void SetVolumeViaSlider(float volume)
+    {
+        mainMixer.SetFloat("Volume", volume);
+        volumeText.text = ((int)volume+80).ToString();
+    }
+
+    public void SetMouseSensitivityViaSlider(float sensitivity)
+    {
+        GameManager.Instance.PlayerManager.FpsController.MouseSensitivity = sensitivity;
+        mouseSensitivityText.text = ((int)(sensitivity)).ToString();
+    }
+
+    public void SetVolumeViaInputField()
+    {
+        float volume = float.Parse(volumeInputText.text);
+        volume = Mathf.Clamp(volume, 0f, 100f);
+        volumeText.text = volume.ToString();
+        volume = volume - 80;
+        mainMixer.SetFloat("Volume", volume);
+        volumeSlider.value = volume;
+        volumeInputText.text = volumeText.text;
     }
 }

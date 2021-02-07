@@ -178,7 +178,6 @@ public class RoomSpawner : MonoBehaviour
     private void SetGameStuff()
     {
         navMeshSurface.BuildNavMesh();
-
         fadeToClearTween.Rewind();
         fadeToClearTween.Play();
         handgunScriptLPFP.CanUseGun = true;

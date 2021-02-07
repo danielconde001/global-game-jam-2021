@@ -1,31 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    #region Singleton
-    /*
-    private static PlayerManager instance;
-    public static PlayerManager Instance
-    {
-        get 
-        {
-            if (!GameObject.FindObjectOfType<PlayerManager>())
-            {
-                GameObject newGameObject = new GameObject("PlayerManager");
-                instance =  newGameObject.AddComponent<PlayerManager>();
-            }
-            else if (GameObject.FindObjectOfType<PlayerManager>()) 
-            {
-                instance = GameObject.FindObjectOfType<PlayerManager>();
-            }
-            return instance;
-        }
-    }
-    */
-    #endregion
-
     private GameObject player;
     public GameObject Player { get { return player; } }
 
@@ -52,5 +30,4 @@ public class PlayerManager : MonoBehaviour
         playerInteract = player.GetComponent<PlayerInteract>();
         playerAudioSource = player.GetComponent<AudioSource>();
     }
-
 }
