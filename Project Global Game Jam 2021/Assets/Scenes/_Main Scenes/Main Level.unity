@@ -1098,11 +1098,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 734389512538662958, guid: 64c2423cbe00a544aa85b40f8d9268b6,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1173688494283925390, guid: 64c2423cbe00a544aa85b40f8d9268b6,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -1260,6 +1255,17 @@ PrefabInstance:
       propertyPath: handgunScriptLPFP
       value: 
       objectReference: {fileID: 1925906379961670428}
+    - target: {fileID: 4173536463056828176, guid: 475476eff7273664da3a2851cec534dc,
+        type: 3}
+      propertyPath: timesNormalRoomSpawns
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4173536463056828176, guid: 475476eff7273664da3a2851cec534dc,
+        type: 3}
+      propertyPath: tutorialRooms.Array.data[0]
+      value: 
+      objectReference: {fileID: 6704879690681570399, guid: 171ae395997f41e41b91b12fcc931337,
+        type: 3}
     - target: {fileID: 4173536463056828177, guid: 475476eff7273664da3a2851cec534dc,
         type: 3}
       propertyPath: m_RootOrder

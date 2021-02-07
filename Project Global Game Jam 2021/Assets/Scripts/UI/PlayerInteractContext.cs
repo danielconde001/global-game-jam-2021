@@ -8,13 +8,16 @@ public class PlayerInteractContext : MonoBehaviour
     public static PlayerInteractContext current;
 
     [SerializeField] private GameObject interactContextTextPanel;
+    [SerializeField] private GameObject interactContextPaperPanel;
     [SerializeField] private TextMeshProUGUI interactContextText;
+    [SerializeField] private TextMeshProUGUI interactContextPaperText;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject interactContext;
     [SerializeField] private float textDuration;
 
     private Transform storedTargetTransform;
     private float timer = 0.0f;
+    private bool isLookingAtPaper = false;
     private bool isHidden = false;
     public bool IsHidden
     {
@@ -32,6 +35,7 @@ public class PlayerInteractContext : MonoBehaviour
     {
         interactContextText.text = ""; 
         interactContextTextPanel.SetActive(false);
+        timer = 0.0f;
     }
 
     public void ShowInteractContext(Transform targetTransform)
@@ -48,17 +52,42 @@ public class PlayerInteractContext : MonoBehaviour
         isHidden = true;
     }
 
+    public void ShowPaperText(string text)
+    {
+        HideText();
+        
+        GameManager.Instance.PlayerManager.Handgun.CanUseGun = false;
+        GameManager.Instance.PlayerManager.FpsController.CanLook = false;
+        GameManager.Instance.PlayerManager.FpsController.CanMove = false;
+        GameManager.Instance.PlayerManager.PlayerInteract.CanInteract = false;
+
+        interactContextPaperText.text = text;
+        interactContextPaperPanel.SetActive(true);
+        isLookingAtPaper = true;
+    }
+
+    public void HidePaperText()
+    {
+        interactContextPaperText.text = "";
+        interactContextPaperPanel.SetActive(false);
+        isLookingAtPaper = false;
+    }
+
     private void Start()
     {
         current = this;
         HideInteractContext();
         HideText();
+        HidePaperText();
     }
 
     private void Update()
     {
         if(timer != 0.0f)
             ShowTextTimer();
+
+        if(isLookingAtPaper)
+            ContextPaperChecker();
     }
 
     private void LateUpdate()
@@ -77,9 +106,24 @@ public class PlayerInteractContext : MonoBehaviour
         timer -= Time.deltaTime;
 
         if(timer <= 0.0f)
-        {
             HideText();
-            timer = 0.0f;
+    }
+
+    private void ContextPaperChecker()
+    {
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            GameManager.Instance.PlayerManager.Handgun.CanUseGun = true;
+            GameManager.Instance.PlayerManager.FpsController.CanLook = true;
+            GameManager.Instance.PlayerManager.FpsController.CanMove = true;
+            StartCoroutine(CanInteractDelay());
+            HidePaperText();
         }
+    }
+
+    private IEnumerator CanInteractDelay()
+    {
+        yield return new WaitForEndOfFrame();
+        GameManager.Instance.PlayerManager.PlayerInteract.CanInteract = true;
     }
 }
