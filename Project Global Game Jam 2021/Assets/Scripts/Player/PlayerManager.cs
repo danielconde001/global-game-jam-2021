@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     #region Singleton
+    /*
     private static PlayerManager instance;
     public static PlayerManager Instance
     {
@@ -22,6 +23,7 @@ public class PlayerManager : MonoBehaviour
             return instance;
         }
     }
+    */
     #endregion
 
     private GameObject player;
@@ -36,11 +38,19 @@ public class PlayerManager : MonoBehaviour
     private Canvas playerCanvas;
     public Canvas PlayerCanvas { get { return playerCanvas; } }
 
+    private PlayerInteract playerInteract;
+    public PlayerInteract PlayerInteract { get { return playerInteract; } }
+
+    private AudioSource playerAudioSource;
+    public AudioSource PlayerAudioSource { get { return playerAudioSource; } }
+
     private void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
         fpsController = player.GetComponent<FPSControllerLPFP.FpsControllerLPFP>();
         handgun = player.GetComponentInChildren<HandgunScriptLPFP>();
         playerCanvas = player.GetComponentInChildren<Canvas>();
+        playerInteract = player.GetComponent<PlayerInteract>();
+        playerAudioSource = player.GetComponent<AudioSource>();
     }
 
 }

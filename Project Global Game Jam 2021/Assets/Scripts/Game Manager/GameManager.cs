@@ -24,15 +24,56 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    [SerializeField] PauseMenuManager pauseMenuManager;
-    [SerializeField] RoomSpawner roomSpawner;
-    [SerializeField] PlayerManager playerManager;
+    [SerializeField] private PauseMenuManager pauseMenuManager;
+    [SerializeField] private RoomSpawner roomSpawner;
+    [SerializeField] private PlayerManager playerManager;
+
+    public PauseMenuManager PauseMenuManager { get => pauseMenuManager; }
+    public RoomSpawner RoomSpawner { get => roomSpawner; }
+    public PlayerManager PlayerManager { get => playerManager; }
 
     private void Awake() {
         instance = this;
+        
+        //Create an EventSystem object if it does not exist yet
+        if (!FindObjectOfType<UnityEngine.EventSystems.EventSystem>() || 
+            !FindObjectOfType<UnityEngine.EventSystems.StandaloneInputModule>())
+        {
+            if (!FindObjectOfType<UnityEngine.EventSystems.StandaloneInputModule>() && 
+                FindObjectOfType<UnityEngine.EventSystems.EventSystem>())
+                Destroy(FindObjectOfType<UnityEngine.EventSystems.EventSystem>().gameObject);
 
-        pauseMenuManager = PauseMenuManager.Instance;
-        roomSpawner = RoomSpawner.Instance;
-        playerManager = PlayerManager.Instance;
+            GameObject newGameObject = new GameObject("EventSystem");
+            newGameObject.AddComponent<UnityEngine.EventSystems.EventSystem>();
+            newGameObject.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+        }
+
+        if (!pauseMenuManager) 
+        {
+            if (FindObjectOfType<PauseMenuManager>()) pauseMenuManager = FindObjectOfType<PauseMenuManager>();
+            else 
+            {
+                GameObject newGameObject = Instantiate(Resources.Load("Pause Menu Manager")) as GameObject;
+                pauseMenuManager =  newGameObject.GetComponent<PauseMenuManager>();
+            }
+        }
+        if (!roomSpawner) 
+        {
+            if (FindObjectOfType<RoomSpawner>()) roomSpawner = FindObjectOfType<RoomSpawner>();
+            else 
+            {
+                GameObject newGameObject = Instantiate(Resources.Load("Room Spawner")) as GameObject;
+                roomSpawner =  newGameObject.GetComponent<RoomSpawner>();
+            }
+        }
+        if (!playerManager) 
+        {
+            if (FindObjectOfType<PlayerManager>()) playerManager = FindObjectOfType<PlayerManager>();
+            else 
+            {
+                GameObject newGameObject = Instantiate(Resources.Load("Player Manager")) as GameObject;
+                playerManager =  newGameObject.GetComponent<PlayerManager>();
+            }
+        }
     }
 }

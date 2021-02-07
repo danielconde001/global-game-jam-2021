@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class PauseMenuManager : MonoBehaviour
 {
+    // SINGELTON PRIVILEGES NOW DEFUNCT
     #region Singleton
+    /*
     private static PauseMenuManager instance;
     public static PauseMenuManager Instance
     {
@@ -28,6 +31,7 @@ public class PauseMenuManager : MonoBehaviour
             return instance;
         }
     }
+    */
     #endregion
     
     [SerializeField] private KeyCode pauseKey = KeyCode.Escape;
@@ -57,23 +61,51 @@ public class PauseMenuManager : MonoBehaviour
         else if (Input.GetKeyDown(pauseKey) && paused) Unpause();
     }
 
-    private void Pause()
+    public void Pause()
     {
         paused = true;
-        PlayerManager.Instance.FpsController.enabled = false;
-        PlayerManager.Instance.Handgun.enabled = false;
-        PlayerManager.Instance.PlayerCanvas.enabled = false;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
+        GameManager.Instance.PlayerManager.FpsController.enabled = false;
+        GameManager.Instance.PlayerManager.Handgun.enabled = false;
+        GameManager.Instance.PlayerManager.PlayerCanvas.enabled = false;
         pauseMenuCanvas.enabled = true;
+        GameManager.Instance.PlayerManager.PlayerInteract.enabled = false;
+        GameManager.Instance.PlayerManager.PlayerAudioSource.enabled = false;
         Time.timeScale = 0;
     }
 
-    private void Unpause()
+    public void Unpause()
     {
         paused = false;
-        PlayerManager.Instance.FpsController.enabled = true;
-        PlayerManager.Instance.Handgun.enabled = true;
-        PlayerManager.Instance.PlayerCanvas.enabled = true;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        GameManager.Instance.PlayerManager.FpsController.enabled = true;
+        GameManager.Instance.PlayerManager.Handgun.enabled = true;
+        GameManager.Instance.PlayerManager.PlayerCanvas.enabled = true;
         pauseMenuCanvas.enabled = false;
+        GameManager.Instance.PlayerManager.PlayerInteract.enabled = true;
+        GameManager.Instance.PlayerManager.PlayerAudioSource.enabled = true;
         Time.timeScale = 1;
+    }
+
+    public void AreYouSurePrompt()
+    {
+        //disable parent canvas
+
+        //enable areyousure canvas
+
+    }
+
+    public void BackToPauseMenu()
+    {
+        //enable parent canvas
+
+        //disable areyousure canvas
+    }
+
+    public void GoToMainMenu()
+    {
+        SceneManager.LoadScene("Main Menu");
     }
 }
