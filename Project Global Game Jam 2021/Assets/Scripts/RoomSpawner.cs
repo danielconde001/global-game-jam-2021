@@ -19,6 +19,7 @@ public class RoomSpawner : MonoBehaviour
     [SerializeField] private NavMeshSurface navMeshSurface;
     [SerializeField] private int timesNormalRoomSpawns = 3;
     [SerializeField] private Transform spawnPoint;
+    [SerializeField] private List<GameObject> tutorialRooms;
     [SerializeField] private List<GameObject> normalRooms;
     [SerializeField] private List<GameObject> keyRooms;
     [SerializeField] private GameObject finalRoom;
@@ -30,8 +31,10 @@ public class RoomSpawner : MonoBehaviour
     private Transform playerTransform;
     private Tween fadeToBlackTween;
     private Tween fadeToClearTween;
+    private Tween fadeToWhiteTween;
     private int normalRoomCounter = 0;
     private int keyRoomCounter = 0;
+    private int tutorialRoomCounter = 0;
     private int lastRoomIndex = -1;
 
     public void SpawnRoom()
@@ -41,7 +44,7 @@ public class RoomSpawner : MonoBehaviour
 
     public void PlayRickRoll()
     {
-        Application.OpenURL(url);
+        StartCoroutine(PlayEnding());
     }
 
     public void RestartLevel()
@@ -61,9 +64,11 @@ public class RoomSpawner : MonoBehaviour
         fadeToBlackTween.Pause();
         fadeToClearTween = faderImage.DOColor(Color.clear, 1.0f);
         fadeToClearTween.Pause();
+        fadeToWhiteTween = faderImage.DOColor(Color.white, 3.0f);
+        fadeToWhiteTween.Pause();
 
         faderImage.color = Color.black;
-        StartCoroutine(SpawnRoomFix());
+        StartCoroutine(SpawnTutorialRoomFix());
     }
 
     private IEnumerator SpawnTheRoom()
@@ -80,69 +85,45 @@ public class RoomSpawner : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
-        if(keyRoomCounter < keyRooms.Count)
+        if(storedRoomClone != null)
         {
-            if(normalRoomCounter < timesNormalRoomSpawns)
-            {
-                if(storedRoomClone != null)
-                {
-                    Destroy(storedRoomClone);
-                    navMeshSurface.BuildNavMesh();
-                }
-                StartCoroutine(SpawnRoomFix());
-            }
-            else
-            {
-                if(storedRoomClone != null)
-                {
-                    Destroy(storedRoomClone);
-                    navMeshSurface.BuildNavMesh();
-                }
-                StartCoroutine(SpawnKeyRoomFix());
-            }
-        }
-        else
-        {
-            if(normalRoomCounter < timesNormalRoomSpawns)
-            {
-                if(storedRoomClone != null)
-                {
-                    Destroy(storedRoomClone);
-                    navMeshSurface.BuildNavMesh();
-                }
-                StartCoroutine(SpawnRoomFix());
-            }
-            else
-            {
-                if(storedRoomClone != null)
-                {
-                    Destroy(storedRoomClone);
-                    navMeshSurface.BuildNavMesh();
-                }
-                StartCoroutine(SpawnFinalRoomFix());
-            }
+            Destroy(storedRoomClone);
+            navMeshSurface.BuildNavMesh();
         }
 
-        /*
-        if(normalRoomCounter < timesNormalRoomSpawns)
-        {
-            if(storedRoomClone != null)
-            {
-                Destroy(storedRoomClone);
-                navMeshSurface.BuildNavMesh();
-            }
-             StartCoroutine(SpawnRoomFix());
-        }
+        if(tutorialRoomCounter < tutorialRooms.Count)
+            StartCoroutine(SpawnTutorialRoomFix());
         else
         {
-            if(storedRoomClone != null)
+            if(keyRoomCounter < keyRooms.Count)
             {
-                Destroy(storedRoomClone);
-                navMeshSurface.BuildNavMesh();
+                if(normalRoomCounter < timesNormalRoomSpawns)
+                    StartCoroutine(SpawnRoomFix());
+                else
+                    StartCoroutine(SpawnKeyRoomFix());
             }
-            StartCoroutine(SpawnFinalRoomFix());
+            else
+            {
+                if(normalRoomCounter < timesNormalRoomSpawns)
+                    StartCoroutine(SpawnRoomFix());
+                else
+                    StartCoroutine(SpawnFinalRoomFix());
+            }
         }
-        */
+    }
+
+    private IEnumerator SpawnTutorialRoomFix()
+    {
+        yield return new WaitForEndOfFrame();
+        GameObject roomClone = (GameObject)Instantiate(tutorialRooms[tutorialRoomCounter], spawnPoint.transform.position, spawnPoint.transform.rotation);
+        storedRoomClone = roomClone;
+        Room room = roomClone.GetComponent<Room>();
+        room.RoomSpawner = this;
+        playerTransform.position = room.PlayerSpawnPoint.position;
+        playerTransform.rotation = room.PlayerSpawnPoint.rotation;
+        tutorialRoomCounter++;
+
+        SetGameStuff();
     }
 
     private IEnumerator SpawnRoomFix()
@@ -162,19 +143,9 @@ public class RoomSpawner : MonoBehaviour
         room.RoomSpawner = this;
         playerTransform.position = room.PlayerSpawnPoint.position;
         playerTransform.rotation = room.PlayerSpawnPoint.rotation;
-        navMeshSurface.BuildNavMesh();
         normalRoomCounter++;
-        
-        fadeToClearTween.Rewind();
-        fadeToClearTween.Play();
-        handgunScriptLPFP.CanUseGun = true;
-        fpsControllerLPFP.CanLook = true;
-        fpsControllerLPFP.CanMove = true;
-        playerHealth.IsInvulnerable = false;
-        playerInteract.CanInteract = true;
 
-        selfAudioSource.clip = doorClose;
-        selfAudioSource.Play();
+        SetGameStuff();
     }
     private IEnumerator SpawnKeyRoomFix()
     {
@@ -185,20 +156,10 @@ public class RoomSpawner : MonoBehaviour
         room.RoomSpawner = this;
         playerTransform.position = room.PlayerSpawnPoint.position;
         playerTransform.rotation = room.PlayerSpawnPoint.rotation;
-        navMeshSurface.BuildNavMesh();
         keyRoomCounter++;
         normalRoomCounter = 0;
 
-        fadeToClearTween.Rewind();
-        fadeToClearTween.Play();
-        handgunScriptLPFP.CanUseGun = true;
-        fpsControllerLPFP.CanLook = true;
-        fpsControllerLPFP.CanMove = true;
-        playerHealth.IsInvulnerable = false;
-        playerInteract.CanInteract = true;
-
-        selfAudioSource.clip = doorClose;
-        selfAudioSource.Play();
+        SetGameStuff();
     }
 
     private IEnumerator SpawnFinalRoomFix()
@@ -210,6 +171,12 @@ public class RoomSpawner : MonoBehaviour
         room.RoomSpawner = this;
         playerTransform.position = room.PlayerSpawnPoint.position;
         playerTransform.rotation = room.PlayerSpawnPoint.rotation;
+
+        SetGameStuff();
+    }
+
+    private void SetGameStuff()
+    {
         navMeshSurface.BuildNavMesh();
 
         fadeToClearTween.Rewind();
@@ -228,5 +195,22 @@ public class RoomSpawner : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private IEnumerator PlayEnding()
+    {
+        handgunScriptLPFP.CanUseGun = false;
+        fpsControllerLPFP.CanLook = false;
+        fpsControllerLPFP.CanMove = false;
+        playerHealth.IsInvulnerable = true;
+        playerInteract.CanInteract = false;
+
+        fadeToWhiteTween.Rewind();
+        fadeToWhiteTween.Play();
+
+        yield return new WaitForSeconds(3.0f);
+
+        Application.OpenURL(url);
+        Application.Quit();
     }
 }

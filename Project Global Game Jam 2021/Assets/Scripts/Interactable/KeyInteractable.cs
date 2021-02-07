@@ -5,8 +5,6 @@ using UnityEngine.Events;
 
 public class KeyInteractable : Interactable
 {
-    [SerializeField] UnityEvent OnInteract;
-
     public override void Interact()
     {
         base.Interact();

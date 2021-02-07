@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class DoorLockedInteractable : Interactable
 {
-    [SerializeField] private AudioSource selfAudioSource;
-    [SerializeField] private AudioClip audioLock;
-    [SerializeField] private string lockedText;
+    [SerializeField] protected AudioSource selfAudioSource;
+    [SerializeField] protected AudioClip audioLock;
+    [SerializeField] protected string lockedText;
     public override void Interact()
     {
         if(canInteract)
