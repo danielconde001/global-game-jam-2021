@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &51511546515686223
+--- !u!1 &4173536463056828143
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,10 +8,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 51511546515686065}
-  - component: {fileID: 51511546515686064}
-  - component: {fileID: 51511546515686066}
-  - component: {fileID: 51511546515686067}
+  - component: {fileID: 4173536463056828177}
+  - component: {fileID: 4173536463056828176}
+  - component: {fileID: 4173536463056828178}
+  - component: {fileID: 4173536463056828179}
   m_Layer: 0
   m_Name: Room Spawner
   m_TagString: Untagged
@@ -19,28 +19,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &51511546515686065
+--- !u!4 &4173536463056828177
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 51511546515686223}
+  m_GameObject: {fileID: 4173536463056828143}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 51511547242038647}
+  - {fileID: 4173536463926014167}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &51511546515686064
+--- !u!114 &4173536463056828176
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 51511546515686223}
+  m_GameObject: {fileID: 4173536463056828143}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ebb9e2666882e3b4485c233061668f6b, type: 3}
@@ -52,9 +52,12 @@ MonoBehaviour:
   fpsControllerLPFP: {fileID: 0}
   playerHealth: {fileID: 0}
   playerInteract: {fileID: 0}
-  navMeshSurface: {fileID: 51511546515686066}
+  navMeshSurface: {fileID: 4173536463056828178}
   timesNormalRoomSpawns: 3
-  spawnPoint: {fileID: 51511546515686065}
+  spawnPoint: {fileID: 4173536463056828177}
+  tutorialRooms:
+  - {fileID: 6704879690681570399, guid: 171ae395997f41e41b91b12fcc931337, type: 3}
+  - {fileID: 6704879690681570399, guid: 1bc40b197aeafdf4fa099b47bf1693bf, type: 3}
   normalRooms:
   - {fileID: 6704879690681570399, guid: 4bfdc6899ee18f143b63fe1e36992df6, type: 3}
   - {fileID: 6704879690681570399, guid: a9d1ce9bf6506e944a7ab4a49f9b8758, type: 3}
@@ -66,18 +69,18 @@ MonoBehaviour:
   - {fileID: 6704879690681570399, guid: e48fd44658237a747bf30dcb386dc269, type: 3}
   - {fileID: 6704879690681570399, guid: 3f536952b59e7ae4ca67b50bd915202c, type: 3}
   - {fileID: 6704879690681570399, guid: 43494f0780e527b41860ab35fc23a9b6, type: 3}
-  finalRoom: {fileID: 6704879690681570399, guid: 171ae395997f41e41b91b12fcc931337,
+  finalRoom: {fileID: 6704879690681570399, guid: 8212f35710f36424ab25bc2e9f40768f,
     type: 3}
-  selfAudioSource: {fileID: 51511546515686067}
+  selfAudioSource: {fileID: 4173536463056828179}
   doorOpen: {fileID: 8300000, guid: e79e4856a6ebded4682ab4ad634e670e, type: 3}
   doorClose: {fileID: 8300000, guid: 886964e2f681fa74c83c5cc273322951, type: 3}
---- !u!114 &51511546515686066
+--- !u!114 &4173536463056828178
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 51511546515686223}
+  m_GameObject: {fileID: 4173536463056828143}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3df27b9289d1e8c4fb82e0df4f4673ba, type: 3}
@@ -89,7 +92,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 8960
   m_UseGeometry: 1
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
@@ -100,13 +103,13 @@ MonoBehaviour:
   m_VoxelSize: 0.1
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 0}
---- !u!82 &51511546515686067
+--- !u!82 &4173536463056828179
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 51511546515686223}
+  m_GameObject: {fileID: 4173536463056828143}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
@@ -156,7 +159,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -196,7 +199,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &51511547242038643
+--- !u!1 &4173536463926014163
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -204,11 +207,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 51511547242038647}
-  - component: {fileID: 51511547242038646}
-  - component: {fileID: 51511547242038645}
-  - component: {fileID: 51511547242038644}
-  - component: {fileID: 51511547242038648}
+  - component: {fileID: 4173536463926014167}
+  - component: {fileID: 4173536463926014166}
+  - component: {fileID: 4173536463926014165}
+  - component: {fileID: 4173536463926014164}
+  - component: {fileID: 4173536463926014168}
   m_Layer: 8
   m_Name: Nav Mesh Plane
   m_TagString: Untagged
@@ -216,35 +219,35 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
---- !u!4 &51511547242038647
+--- !u!4 &4173536463926014167
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 51511547242038643}
+  m_GameObject: {fileID: 4173536463926014163}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children: []
-  m_Father: {fileID: 51511546515686065}
+  m_Father: {fileID: 4173536463056828177}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &51511547242038646
+--- !u!33 &4173536463926014166
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 51511547242038643}
+  m_GameObject: {fileID: 4173536463926014163}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &51511547242038645
+--- !u!23 &4173536463926014165
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 51511547242038643}
+  m_GameObject: {fileID: 4173536463926014163}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -256,7 +259,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 29f867d74d513c94399f5b4039a70d28, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -277,13 +280,13 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &51511547242038644
+--- !u!64 &4173536463926014164
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 51511547242038643}
+  m_GameObject: {fileID: 4173536463926014163}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
@@ -291,13 +294,13 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &51511547242038648
+--- !u!114 &4173536463926014168
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 51511547242038643}
+  m_GameObject: {fileID: 4173536463926014163}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d07ce676d7afda4dabb3b0f7dd5e654, type: 3}
