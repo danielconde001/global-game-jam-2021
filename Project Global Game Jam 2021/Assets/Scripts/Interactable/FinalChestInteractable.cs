@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class FinalChestInteractable : Interactable
 {
+    [SerializeField] protected AudioSource selfAudioSource;
+    [SerializeField] protected AudioClip clipChestOpen;
+
     public override void Interact()
     {
         if(canInteract)
         {
             RoomSpawner.current.PlayRickRoll();
-            Application.Quit();
+            selfAudioSource.clip = clipChestOpen;
+            selfAudioSource.Play();
         }
     }
 }

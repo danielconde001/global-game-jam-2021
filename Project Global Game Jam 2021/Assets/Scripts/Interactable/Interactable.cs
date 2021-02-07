@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Interactable : MonoBehaviour
 {
@@ -19,14 +20,16 @@ public class Interactable : MonoBehaviour
 
     [SerializeField] protected float interactDelay = 0.0f;
 
+    public UnityEvent OnInteract;
+
     public virtual void Interact()
     {
         if(canInteract)
         {
+            OnInteract.Invoke();
+
             if(interactDelay > 0.0f)
-            {
                 StartCoroutine(InteractDelayTimer());
-            }
         }
     }
 
