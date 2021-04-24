@@ -100,7 +100,8 @@ public class PauseMenuManager : MonoBehaviour
 
     public void GoToMainMenu()
     {
-        SceneManager.LoadScene("Main Menu");
+        //SceneManager.LoadScene("Main Menu");
+        Application.Quit(); // temp
     }
 
     public void GoToSettings()
